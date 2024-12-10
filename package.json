@@ -1,0 +1,67 @@
+{
+  "name": "ent-billing-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ag-grid-community/client-side-row-model": "^31.2.1",
+    "@ag-grid-community/csv-export": "^31.2.1",
+    "@ag-grid-enterprise/excel-export": "^31.2.1",
+    "@ag-grid-enterprise/menu": "^31.2.1",
+    "@ag-grid-enterprise/row-grouping": "^31.2.1",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "ag-grid-charts-enterprise": "^31.2.1",
+    "ag-grid-community": "^31.2.1",
+    "ag-grid-enterprise": "^31.2.0",
+    "ag-grid-react": "^31.2.1",
+    "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
+    "file-saver": "^2.0.5",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.8.69",
+    "react": "^18.2.0",
+    "react-data-table-component": "^7.6.2",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-pdf": "^9.1.1",
+    "react-pdftotext": "^1.1.1",
+    "react-redux": "^9.1.0",
+    "react-router-dom": "^6.28.0",
+    "react-scripts": "^5.0.1",
+    "react-slick": "^0.30.2",
+    "react-spinners": "^0.13.8",
+    "react-to-print": "^2.15.1",
+    "react-toastify": "^10.0.5",
+    "redux-thunk": "^3.1.0",
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^6.1.8",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

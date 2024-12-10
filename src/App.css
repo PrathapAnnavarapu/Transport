@@ -1,0 +1,108 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Buttons */
+
+.primary-button{
+  width: 100%;
+  height: 40px;
+  border-radius: 12px;
+  background-color: rgb(29, 158, 87);
+  color: #fff;
+  margin: 20px 0px;
+  padding: 10px 5px 10px 5px;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+  font-family: 600;
+  position: relative;
+  /* Ensure relative positioning for absolute child */
+  display: inline-flex;
+  /* Use flex to align items */
+  align-items: center;
+  /* Center items vertically */
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+/* Authuntication */
+/* ------------------------------------------------------------- */
+
+.authuntication-main{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.authuntication-main form{ 
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 40%;
+  height: 50%;
+  padding: 10px 8%;
+  background-color: #fff; 
+  box-shadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px';
+  gap:10px;
+
+}
+
+.authuntication-main form div{
+  width: 100%;
+  height: 100px;
+}
+
+.authuntication-main form label{
+  font-size: 20px;
+  font-weight: 600;
+  color: rgb(29, 158, 87);
+}
+
+.authuntication-main form div input{
+  width: 100%;
+  height: 40px;  
+  border: 1px solid #CECECE;
+  border-radius: 8px;
+  margin: 10px 0px;
+  font-size: 16px;
+  padding-left: 30px;
+  font-weight: 600;
+}
+
+.authuntication-main form div input:hover{
+  width: 100%;
+  height: 40px;
+  border: 1px solid ;
+  border-radius: 8px;
+  margin: 10px 0px;
+  font-size: 16px;
+  padding-left: 30px;
+  font-weight: 600;
+}
+
+.mandatory {
+  color: #e62e28;
+  font-size: 18px;
+  font-weight: bolder;
+}
+
+.error-msg {
+  color: red;
+  padding-left: 10px;
+  font-size: 10px;
+  text-decoration: none;
+}
