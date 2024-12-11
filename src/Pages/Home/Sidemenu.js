@@ -7,15 +7,15 @@ const Sidemenu = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const items = [
-    { id: 1, name: 'Item 1' },
-    { id: 2, name: 'Item 2' },
-    { id: 3, name: 'Item 3' },
+    { id: 1, name: '23466444' },
+    { id: 2, name: '89977484' },
+    { id: 3, name: '45669998' },
   ];
   
 
   const handleSelectAll = () => {
     if (selectAll) {
-        
+
       setSelectedItems([]);
     } else {
       setSelectedItems(items.map(item => item.id));
@@ -32,7 +32,7 @@ const Sidemenu = () => {
   };
 
   return (
-    <div>
+    <div className='main-sidemenu'>
       <label>
         <input
           type="checkbox"
