@@ -1,4 +1,4 @@
-const toggleSideBar = false 
+ const toggleSideBar = false 
 
 export default function SideBarToggleStatus(state = toggleSideBar, action) {
     const { type } = action;
