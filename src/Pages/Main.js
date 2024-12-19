@@ -2,19 +2,17 @@ import React, { useState, useMemo } from 'react';
 import Popup from '../Components/Model';
 import Button from '../Components/Button';
 import Toast from '../Components/Toast';
+import GridApi from '../Components/AgGrid'; // Import your GridMultiselection component
 
 const Mainmenu = () => {
-  const { warn } = Toast()
+  const { warn } = Toast();
 
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [bulkFormat, setBulkFormat] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [filter, setFilter] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [pendingBulkFormat, setPendingBulkFormat] = useState('');
-
-  console.log(selectedItems)
 
   const items = [
     { id: 1, name: '23466444', date: '2024-12-01', finalDate: '2024-12-15' },
@@ -28,9 +26,9 @@ const Mainmenu = () => {
     { id: 10, name: '45679998', date: '2024-05-03', finalDate: '2024-12-17' },
     { id: 11, name: '23786444', date: '2024-04-01', finalDate: '2024-12-15' },
     { id: 12, name: '85677484', date: '2024-03-02', finalDate: '2024-12-16' },
-    { id: 13, name: '45663498', date: '2024-05-03', finalDate: '2024-12-17' },
-    { id: 14, name: '23411244', date: '2024-04-01', finalDate: '2024-12-15' },
-    { id: 15, name: '84609484', date: '2024-03-02', finalDate: '2024-12-16' },
+    { id: 10, name: '45663498', date: '2024-05-03', finalDate: '2024-12-17' },
+    { id: 11, name: '23411244', date: '2024-04-01', finalDate: '2024-12-15' },
+    { id: 12, name: '84609484', date: '2024-03-02', finalDate: '2024-12-16' },
   ];
 
   const toConvertUSString = (newInvoiceDate) => {
@@ -43,31 +41,9 @@ const Mainmenu = () => {
     return `${month}-${day}-${year}`;
   };
 
-  const sortedItems = useMemo(() => {
-    let sortableItems = [...items];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [items, sortConfig]);
-
-  const filteredItems = sortedItems.filter(item => item.name.includes(filter))
-
-  const requestSort = key => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
+  const filteredItems = useMemo(() => {
+    return items.filter(item => item.name.includes(filter));
+  }, [items, filter]);
 
   const handleSelectAll = () => {
     if (!bulkFormat) {
@@ -122,6 +98,46 @@ const Mainmenu = () => {
     setIsPopupOpen(false);
   };
 
+  const [rowData, setRowData] = useState(items);
+  const [columnDefs, setColumnDefs] = useState([
+    { field: "name", headerName: "Invoice Number", minWidth: 150 },
+    { field: "id", headerName: "Invoice ID", maxWidth: 90 },
+    { field: "date", headerName: "Invoice Date", minWidth: 150 },
+    { field: "finalDate", headerName: "Invoice Final Date", minWidth: 150 },
+    {
+      field: "fileFormat",
+      headerName: "File Format",
+      cellRendererFramework: (params) => (
+        <div className='radio-buttons-container'>
+          <div>
+            <input
+              type='radio'
+              name={`option-${params.data.id}`}
+              value='Excel'
+              checked={params.data.fileFormat === 'Excel'}
+              onChange={(e) => handleChangeOption(e, params.data.id)}
+            />
+            <label>Excel</label>
+          </div>
+          <div>
+            <input
+              type='radio'
+              name={`option-${params.data.id}`}
+              value='PDF'
+              checked={params.data.fileFormat === 'PDF'}
+              onChange={(e) => handleChangeOption(e, params.data.id)}
+            />
+            <label>PDF</label>
+          </div>
+        </div>
+      ),
+    },
+  ]);
+
+  const onGridReady = params => {
+    setRowData(items);
+  };
+
   return (
     <form className='main-sidemenu'>
       <div className='action-buttons-container'>
@@ -166,69 +182,12 @@ const Mainmenu = () => {
             <Button type='button' className='primary-button' text='No' onClick={() => setIsPopupOpen(false)} />
           </div>
         </Popup>
-        <div className='table-container'>
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={handleSelectAll}
-                  />
-                </th>
-                <th onClick={() => requestSort('name')}>Invoice Number</th>
-                <th>Invoice ID</th>
-                <th onClick={() => requestSort('date')}>Invoice Date</th>
-                <th onClick={() => requestSort('finalDate')}>Invoice Final Date</th>
-                <th>File Format</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredItems.map(item => (
-                <tr key={item.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.some(selectedItem => selectedItem.id === item.id)}
-                      onChange={() => handleCheckboxChange(item)}
-                      className='checkbox-class'
-                      disabled={!selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat}
-                    />
-                  </td>
-                  <td>{item.name}</td>
-                  <td></td>
-                  <td>{toConvertUSString(item.date)}</td>
-                  <td>{toConvertUSString(item.finalDate)}</td>
-                  <td>
-                    <div className='radio-buttons-container'>
-                      <div>
-                        <input
-                          type='radio'
-                          name={`option-${item.id}`}
-                          value='Excel'
-                          checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'Excel'}
-                          onChange={(e) => handleChangeOption(e, item.id)}
-                        />
-                        <label>Excel</label>
-                      </div>
-                      <div>
-                        <input
-                          type='radio'
-                          name={`option-${item.id}`}
-                          value='PDF'
-                          checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'PDF'}
-                          onChange={(e) => handleChangeOption(e, item.id)}
-                        />
-                        <label>PDF</label>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* <div className='table-container'> */}
+          <GridApi
+            rowData={rowData}
+            columnDefs={columnDefs}
+          />
+        {/* </div> */}
       </div>
     </form>
   );

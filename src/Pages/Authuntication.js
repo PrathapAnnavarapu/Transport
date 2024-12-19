@@ -2,20 +2,16 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import ToastComponent from '../Components/Toast';
 import Button from '../Components/Button';
-import ThreeDotsLoader from '../Components/ThreeDotsLoader';
-
 
 
 const Authentication = () => {
 
     const [accountOptions ]= useState(['account option1', 'account option2']);
-    const [invoiceOptions ]= useState(['invoice option1', 'invoice option2']);
-
     const { success, error } = ToastComponent();
 
     const [credentials, setCredentials] = useState({
         accountNumber: '',
-        invoiceId: '',
+        
     });
     const [credentialsError, setCredentialsError] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +26,8 @@ const Authentication = () => {
 
     const sendCredentialsToDB = async (msg) => {
         if (Object.keys(msg).length === 0) {
-            setIsLoading(true);
-            const url = 'http://vmwhnstemdev01.nadops.net:8080/wireline/authenticate';
+            setIsLoading(true);            
+            const url = '';
 
             const options = {
                 method: 'POST',
@@ -70,10 +66,7 @@ const Authentication = () => {
         let errorObject = {};
         if (!details.accountNumber) {
             errorObject.msg = 'Account number should not be empty';
-        }
-        if (!details.invoiceId) {
-            errorObject.msg = 'Invoice id should not be empty';
-        }
+        }       
         return errorObject;
     };
 
@@ -98,34 +91,16 @@ const Authentication = () => {
                         placeholder="Account Number"
                         value={credentials.accountNumber}
                     />
-                    <datalist id="account">
-                        
+                    <datalist id="account">                        
                         {accountOptions.map((option, index) => (
                             <option key={index} value={option} />
                         ))}
                     </datalist>
-                </div>
-
-                <div className="input-field-container">
-                    <label htmlFor="invoiceId">Invoice ID <span className="mandatory">*</span></label><br />
-                    <input
-                        list="invoice"
-                        id="invoiceId"
-                        name="invoiceId"
-                        onChange={handleChange}
-                        placeholder="Invoice ID"
-                        value={credentials.invoiceId}
-                    />
-                    <datalist id="invoice">
-                        {invoiceOptions.map((option, index) => (
-                            <option key={index} value={option} />
-                        ))}
-                    </datalist>
-                </div>
+                </div>               
                 <Button
                     type="submit"
                     className="primary-button"
-                    text={isLoading ? <ThreeDotsLoader size="20px" color="#fff" /> : 'Submit'}
+                    text={isLoading ? "Loading..." : 'Submit'}
                 />
             </form>
         </div>

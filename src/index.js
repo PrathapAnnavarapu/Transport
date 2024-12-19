@@ -3,11 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ToastContainer } from 'react-toastify';
+
+// import {Provider} from 'react-redux'
+// import Store from './Components/Redux/Store'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+      {/* <Provider store={Store}> */}
+      <App />
+      <ToastContainer/>
+      {/* </Provider>        */}
+   
   </React.StrictMode>
 );
 

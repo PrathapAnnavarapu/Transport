@@ -5,9 +5,6 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 
 
-
-
-
 const GridExample = React.forwardRef((props) => {   
   const {rowData, colDefs, pagination, groupIncludeTotalFooter, groupIncludeFooter, getRowStyle, ref} = props
 
@@ -20,9 +17,7 @@ const GridExample = React.forwardRef((props) => {
       enableValue: true,
       width:'125',
     };
-  }, []);  
-  
-  
+  }, []); 
 
   
 

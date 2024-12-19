@@ -1,36 +1,35 @@
 import React, { lazy, Suspense } from 'react';
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-
 import Loader from './Components/Loader';
 import ToastComponent from './Components/Toast';
-import Sidemenu from './Pages/Mainmenu'
 import './App.css';
 
 const Login = lazy(() => import('./Pages/Authuntication'));
-// const Sidemenu = lazy(() => import('./Pages/Mainmenu'));
+const Mainmenu = lazy(() => import('./Pages/Mainmenu'));
 const Header = lazy(() => import('./Components/Header'));
+const Main = lazy(()=> import('./Pages/Main'))
 
 function App() {
   const { error } = ToastComponent();
   const isAuthenticated = true; // This should be dynamically set based on your authentication logic
 
   return (
-    <Router>
-      <Suspense fallback={<Loader />}>
-        <div className='main-home'>
-          <Header />
+    <BrowserRouter future={{ v7_relativeSplatPath: true }}>
+      <Suspense fallback={<Loader/>}>
+        <div className='main-home'>          
           {isAuthenticated ? (
+            <><Header />
             <section>
               <Routes>
-                <Route path='/Hughesnetwork/Management/Home' element={<Sidemenu />} />
+                <Route path='/Hughesnetwork/Management/Home' element={<Mainmenu />} />
                 <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Home' replace />} />
               </Routes>
-            </section>
+            </section></>
           ) : (
             <Routes>
               <Route path='/Hughesnetwork/Management/Authentication' element={<Login />} />
@@ -39,7 +38,7 @@ function App() {
           )}
         </div>
       </Suspense>
-    </Router>
+    </BrowserRouter>
   );
 }
 

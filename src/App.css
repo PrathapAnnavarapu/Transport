@@ -36,6 +36,26 @@ body {
   transition: background-color 0.3s ease;
 }
 
+.secondary-button{
+  width: 100px;
+  height: 30px;
+  border-radius: 12px;
+  background-color: rgb(29, 158, 87);
+  color: #fff;  
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+  font-family: 600;
+  position: relative;
+  /* Ensure relative positioning for absolute child */
+  display: inline-flex;
+  /* Use flex to align items */
+  align-items: center;
+  /* Center items vertically */
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
 
 /* Popup -Model */
 /* ***************************************** */
@@ -98,6 +118,102 @@ body {
   height: 90vh;
 }
 
+/* Loader */
+/* *********************************** */
+
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.save-loader-background-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ThreeDots Loader */
+/* ******************************************* */
+/* ThreeDotsLoader.css */
+
+/* Loader container styles */
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 40px; /* Adjusted width */
+  height: 10px; /* Adjusted height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto; /* Centering the loader */
+}
+
+.lds-ellipsis div {
+  position: absolute;
+  top: 33%;
+  width: 8px; /* Reduced width */
+  height: 8px; /* Reduced height */
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+  left: 24px; /* Adjusted position */
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+  left: 40px; /* Adjusted position */
+  animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(16px, 0); /* Adjusted translation */
+  }
+}
+
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
 
 
 /* App */
@@ -238,14 +354,13 @@ body {
   padding: 10px;
   position: absolute;
   top: 8%;
-  overflow-y: scroll;
   /* z-index: -9999; */
 }
 
 
 .invoice-numbers-list {
   width: 100%;
-  height: 100%;
+  height: 87%;
 }
 
 .bulk-selection-container{
@@ -254,6 +369,7 @@ body {
   align-items: flex-start;
   gap: 20px;
   padding: 10px;
+  height: 8%;
 }
 
 .bulk-selection-container div{
@@ -275,21 +391,49 @@ body {
   margin-right: 5px;
 }
 
+.table-container {
+  width: 100%;
+  height: 92%;  
+  overflow: hidden;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
+  height: 100%;
 }
 
 table th,
 table td {
   border: 1px solid #ddd;
-  padding: 6px 10px 6px 10px;
+  padding: 6px 10px;
   text-align: left;
+}
+
+table thead {
+  position: sticky;
+  top: 0;
+  background-color: #f2f2f2;
+  z-index: 1;  
+}
+
+.table-container tbody {
+  display: block;
+  height: calc(100% - 40px); /* Adjust based on header height */
+  overflow-y: auto;
+  scrollbar-width: none;
+
+}
+
+.table-container thead,
+.table-container tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 table th {
   background-color: #f2f2f2;
-  padding: 10px;
 }
 
 .checkbox-class {
@@ -323,12 +467,18 @@ table th {
 display: flex;
 }
 
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+
 .search-input{
   display: flex;
   align-self: flex-end;
   padding: 5px;
   border-radius: 8px;
   border: 1px solid;
+  height: 5%;
 }
 
 .status-buttons{
@@ -338,3 +488,31 @@ display: flex;
   gap: 10px;
   width: 100%;
 }
+
+.action-buttons-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 7%;
+}
+
+
+
+
+
+
+
+
+
+.example-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#myGrid {
+  flex: 1 1 0px;
+  width: 100%;
+}
+
