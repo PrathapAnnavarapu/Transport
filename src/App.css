@@ -398,6 +398,7 @@ body {
 }
 
 table {
+  display: block;
   width: 100%;
   border-collapse: collapse;
   height: 100%;
@@ -406,7 +407,7 @@ table {
 table th,
 table td {
   border: 1px solid #ddd;
-  padding: 6px 10px;
+  padding: 10px 10px;
   text-align: left;
 }
 
@@ -514,5 +515,29 @@ display: flex;
 #myGrid {
   flex: 1 1 0px;
   width: 100%;
+}
+
+
+
+/* Status */
+/* -------------------------------------------------------- */
+
+
+.status-container{
+   position: absolute;
+   top: 8%;
+}
+
+
+.status-paid {
+  color: green;
+}
+
+.status-in-progress {
+  color: rgb(228, 228, 22);
+}
+
+.status-failure {
+  color: red;
 }
 

@@ -2,35 +2,26 @@ import React, { useState, useMemo } from 'react';
 import Popup from '../Components/Model';
 import Button from '../Components/Button';
 import Toast from '../Components/Toast';
+import Table from '../Components/Table'; // Adjust the import path as necessary
+// import './StatusTable.css'; // Import the CSS file for status styling
 
 const Mainmenu = () => {
-  const { warn } = Toast()
+  const { warn } = Toast();
 
   const [selectedItems, setSelectedItems] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
   const [bulkFormat, setBulkFormat] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [filter, setFilter] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [pendingBulkFormat, setPendingBulkFormat] = useState('');
 
-  console.log(selectedItems)
+  console.log(selectedItems);
 
   const items = [
-    { id: 1, name: '23466444', date: '2024-12-01', finalDate: '2024-12-15' },
+    { id: 1, name: '23466444', date: '2024-12-01', finalDate: '2024-12-15'  },
     { id: 2, name: '89977484', date: '2024-10-02', finalDate: '2024-12-16' },
     { id: 3, name: '45669998', date: '2024-09-03', finalDate: '2024-12-17' },
-    { id: 5, name: '23435244', date: '2024-12-01', finalDate: '2024-12-15' },
-    { id: 6, name: '89974584', date: '2024-07-02', finalDate: '2024-12-16' },
-    { id: 7, name: '45669348', date: '2024-05-03', finalDate: '2024-12-17' },
-    { id: 8, name: '23466444', date: '2024-04-01', finalDate: '2024-12-15' },
-    { id: 9, name: '89977484', date: '2024-03-02', finalDate: '2024-12-16' },
-    { id: 10, name: '45679998', date: '2024-05-03', finalDate: '2024-12-17' },
-    { id: 11, name: '23786444', date: '2024-04-01', finalDate: '2024-12-15' },
-    { id: 12, name: '85677484', date: '2024-03-02', finalDate: '2024-12-16' },
-    { id: 13, name: '45663498', date: '2024-05-03', finalDate: '2024-12-17' },
-    { id: 14, name: '23411244', date: '2024-04-01', finalDate: '2024-12-15' },
-    { id: 15, name: '84609484', date: '2024-03-02', finalDate: '2024-12-16' },
+    // Add more items as needed
   ];
 
   const toConvertUSString = (newInvoiceDate) => {
@@ -44,44 +35,21 @@ const Mainmenu = () => {
   };
 
   const sortedItems = useMemo(() => {
-    let sortableItems = [...items];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
+    let sortableItems = [...items];    
     return sortableItems;
   }, [items, sortConfig]);
 
-  const filteredItems = sortedItems.filter(item => item.name.includes(filter))
+  const filteredItems = sortedItems.filter(item => item.name.includes(filter));
 
-  const requestSort = key => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
+  // const requestSort = key => {
+  //   let direction = 'ascending';
+  //   if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+  //     direction = 'descending';
+  //   }
+  //   setSortConfig({ key, direction });
+  // };
 
-  const handleSelectAll = () => {
-    if (!bulkFormat) {
-      warn('Please select a bulk file format before selecting all.');
-      return;
-    }
-    if (selectAll) {
-      setSelectedItems([]);
-    } else {
-      const allItems = items.map(item => ({ ...item, fileFormat: bulkFormat }));
-      setSelectedItems(allItems);
-    }
-    setSelectAll(!selectAll);
-  };
+ 
 
   const handleCheckboxChange = (item) => {
     const existingItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
@@ -121,6 +89,48 @@ const Mainmenu = () => {
     setSelectedItems(updatedItems);
     setIsPopupOpen(false);
   };
+
+  const headers = ['Select', 'Invoice Number', 'Invoice ID', 'Invoice Date', 'Invoice Final Date', 'File Format'];
+
+  const rowData = filteredItems.map(item => ({
+    'Select': (
+      <input
+        type="checkbox"
+        checked={selectedItems.some(selectedItem => selectedItem.id === item.id)}
+        onChange={() => handleCheckboxChange(item)}
+        className='checkbox-class'
+        disabled={!selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat}
+      />
+    ),
+    'Invoice Number': item.name,
+    'Invoice ID': item.id,
+    'Invoice Date': toConvertUSString(item.date),
+    'Invoice Final Date': toConvertUSString(item.finalDate),   
+    'File Format': (
+      <div className='radio-buttons-container'>
+        <div>
+          <input
+            type='radio'
+            name={`option-${item.id}`}
+            value='Excel'
+            checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'Excel'}
+            onChange={(e) => handleChangeOption(e, item.id)}
+          />
+          <label>Excel</label>
+        </div>
+        <div>
+          <input
+            type='radio'
+            name={`option-${item.id}`}
+            value='PDF'
+            checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'PDF'}
+            onChange={(e) => handleChangeOption(e, item.id)}
+          />
+          <label>PDF</label>
+        </div>
+      </div>
+    )
+  }));
 
   return (
     <form className='main-sidemenu'>
@@ -167,67 +177,7 @@ const Mainmenu = () => {
           </div>
         </Popup>
         <div className='table-container'>
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={handleSelectAll}
-                  />
-                </th>
-                <th onClick={() => requestSort('name')}>Invoice Number</th>
-                <th>Invoice ID</th>
-                <th onClick={() => requestSort('date')}>Invoice Date</th>
-                <th onClick={() => requestSort('finalDate')}>Invoice Final Date</th>
-                <th>File Format</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredItems.map(item => (
-                <tr key={item.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.some(selectedItem => selectedItem.id === item.id)}
-                      onChange={() => handleCheckboxChange(item)}
-                      className='checkbox-class'
-                      disabled={!selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat}
-                    />
-                  </td>
-                  <td>{item.name}</td>
-                  <td></td>
-                  <td>{toConvertUSString(item.date)}</td>
-                  <td>{toConvertUSString(item.finalDate)}</td>
-                  <td>
-                    <div className='radio-buttons-container'>
-                      <div>
-                        <input
-                          type='radio'
-                          name={`option-${item.id}`}
-                          value='Excel'
-                          checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'Excel'}
-                          onChange={(e) => handleChangeOption(e, item.id)}
-                        />
-                        <label>Excel</label>
-                      </div>
-                      <div>
-                        <input
-                          type='radio'
-                          name={`option-${item.id}`}
-                          value='PDF'
-                          checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'PDF'}
-                          onChange={(e) => handleChangeOption(e, item.id)}
-                        />
-                        <label>PDF</label>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table headers={headers} rowData={rowData} />
         </div>
       </div>
     </form>

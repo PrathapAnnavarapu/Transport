@@ -13,6 +13,11 @@ const Login = lazy(() => import('./Pages/Authuntication'));
 const Mainmenu = lazy(() => import('./Pages/Mainmenu'));
 const Header = lazy(() => import('./Components/Header'));
 const Main = lazy(()=> import('./Pages/Main'))
+const Status = lazy(()=> import('./Pages/Status'))
+
+
+
+
 
 function App() {
   const { error } = ToastComponent();
@@ -27,6 +32,7 @@ function App() {
             <section>
               <Routes>
                 <Route path='/Hughesnetwork/Management/Home' element={<Mainmenu />} />
+                <Route path='/Hughesnetwork/Management/Home/Status' element={<Status />} />
                 <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Home' replace />} />
               </Routes>
             </section></>
