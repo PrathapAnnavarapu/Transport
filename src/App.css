@@ -142,6 +142,59 @@ body {
   align-items: center;
 }
 
+
+
+/* Tabs */
+/* ------------------------------------------------------------- */
+
+.tabs {
+  font-family: sans-serif, Arial;
+  width: 100%;
+  height: 100%;
+}
+
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  height: 8%;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom 0.3s ease;
+  font-size: 16px;
+  color: #fff;
+}
+
+.tab-button:hover {
+  border-bottom: 2px solid #ccc;
+}
+
+.tab-button.active {
+  border-bottom: 2px solid #fff;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.tabs-content {
+  /* border: 1px solid #ccc; */
+  border-top: none;
+  width: 100%;
+  height: 92%;
+}
+
+.tab {
+  width: 100%;
+  height: 100%;
+}
+
 /* ThreeDots Loader */
 /* ******************************************* */
 /* ThreeDotsLoader.css */
@@ -238,34 +291,194 @@ body {
 /* Header */
 /* ------------------------------------------------------------------ */
 
+/* Header container */
+/* Header container */
 .header-main {
   width: 100%;
-  height: 8%;
+  height: 10%;
   background-color: rgb(29, 158, 87);
-  columns: #fff;
-  padding: 5px 20px 5px 20px;
-  position: fixed;
+  color: #fff;
+  padding: 5px 20px;
+  position: fixed; /* Ensure the header stays fixed at the top */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20; /* Set a higher z-index value */
 }
 
+/* Navigation styles */
+/* Header container */
+.header-main {
+  width: 100%;
+  height: 10%;
+  background-color: rgb(29, 158, 87);
+  color: #fff;
+  padding: 5px 20px;
+  position: fixed; /* Ensure the header stays fixed at the top */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20; /* Set a higher z-index value */
+}
+
+/* Navigation styles */
 .header-main nav {
   width: 100%;
-  height: 100%;
+  height: 60%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
 .header-main nav div {
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   gap: 10px;
 }
 
+/* Menu items container (ensure horizontal layout) */
+.header-main > div {
+  width: 100%;
+  height: 40%;
+  display: flex;  /* Use flexbox for the row layout */
+  justify-content: flex-start; /* Align menu items to the left */
+  align-items: center;        /* Vertically center items */
+  gap: 20px;                   /* Spacing between menu items */
+  list-style-type: none;       /* Remove default list styling */
+}
+
+.header-main > div >ul {
+  width: 100%;
+  height: 40%;
+  display: flex;  /* Use flexbox for the row layout */
+  justify-content: flex-start; /* Align menu items to the left */
+  align-items: center;        /* Vertically center items */
+  gap: 20px;                   /* Spacing between menu items */
+  list-style-type: none;       /* Remove default list styling */
+}
+
+
+
+/* Inactive tab styling */
+.inactiveTabClass {
+  background-color: transparent;
+  font-size: 16px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 15px; /* Adjust padding for better spacing */
+  list-style-type: none;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+/* Active tab styling */
+.activeTabClass {
+  background-color: transparent;
+  font-size: 16px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 15px;
+  border-bottom: solid 2px #fff;
+  list-style-type: none;
+  position: relative;
+}
+
+/* Notification styles */
 .header-main nav div a {
   color: #fff;
   font-size: 24px;
 }
+
+.notification {
+  position: relative;
+  display: inline-block;
+}
+
+.notification:hover {
+  border-radius: 50%;
+  background-color: rgb(29, 158, 87);
+  color: #fff;
+}
+
+/* Tooltip for notifications */
+.notification::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px;
+  background-color: #fff;
+  color: #26245c;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  pointer-events: none;
+  border: 1px solid #cecece;
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+.notification:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Submenu styles */
+.reports-submenu,
+.more-submenu {
+  display: none; /* Hide submenus by default */
+  position: absolute;
+  top: 100%; /* Position it right below the parent item */
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  width: 150px; /* Adjust width of the submenu */
+  padding: 10px 0; /* Add padding for vertical spacing */
+}
+
+/* Submenu list styling */
+.reports-submenu ul,
+.more-submenu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  color: rgb(29, 158, 87);
+}
+
+.reports-submenu ul li,
+.more-submenu ul li {
+  padding: 8px 10px; /* Padding inside submenu items */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover effect for submenu items */
+.reports-submenu ul li:hover,
+.more-submenu ul li:hover {
+  background-color: #f1f1f1;
+}
+
+/* Display submenus on hover */
+.header-main li:hover .reports-submenu,
+.header-main li:hover .more-submenu {
+  display: block;
+}
+
+
+
 
 /* Authuntication */
 /* ------------------------------------------------------------- */
@@ -276,7 +489,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
 .authuntication-main form {
@@ -345,7 +557,7 @@ body {
 
 .main-sidemenu {
   width: 100%;
-  height: 92%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -353,17 +565,16 @@ body {
   gap: 10px;
   padding: 10px;
   position: absolute;
-  top: 8%;
-  /* z-index: -9999; */
+  top: 10%;
+  z-index: 10; /* Set a higher z-index value */
 }
-
 
 .invoice-numbers-list {
   width: 100%;
   height: 87%;
 }
 
-.bulk-selection-container{
+.bulk-selection-container {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
@@ -372,7 +583,7 @@ body {
   height: 8%;
 }
 
-.bulk-selection-container div{
+.bulk-selection-container div {
   gap: 5px;
   display: flex;
 }
@@ -393,7 +604,7 @@ body {
 
 .table-container {
   width: 100%;
-  height: 92%;  
+  height: 92%;
   overflow: hidden;
 }
 
@@ -415,7 +626,7 @@ table thead {
   position: sticky;
   top: 0;
   background-color: #f2f2f2;
-  z-index: 1;  
+  z-index: 1;
 }
 
 .table-container tbody {
@@ -423,7 +634,6 @@ table thead {
   height: calc(100% - 40px); /* Adjust based on header height */
   overflow-y: auto;
   scrollbar-width: none;
-
 }
 
 .table-container thead,
@@ -456,16 +666,17 @@ table th {
 .user-input-details label {
   margin-left: 5px;
 }
-.radio-buttons-container{
+
+.radio-buttons-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 20px;
 }
 
-.radio-buttons-container div{
+.radio-buttons-container div {
   gap: 5px;
-display: flex;
+  display: flex;
 }
 
 .search-container {
@@ -473,7 +684,7 @@ display: flex;
   display: inline-block;
 }
 
-.search-input{
+.search-input {
   display: flex;
   align-self: flex-end;
   padding: 5px;
@@ -482,7 +693,7 @@ display: flex;
   height: 5%;
 }
 
-.status-buttons{
+.status-buttons {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -490,21 +701,13 @@ display: flex;
   width: 100%;
 }
 
-.action-buttons-container{
+.action-buttons-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 7%;
 }
-
-
-
-
-
-
-
-
 
 .example-wrapper {
   display: flex;
@@ -519,13 +722,14 @@ display: flex;
 
 
 
+
 /* Status */
 /* -------------------------------------------------------- */
 
 
 .status-container{
    position: absolute;
-   top: 8%;
+   top: 10%;
 }
 
 
@@ -540,4 +744,7 @@ display: flex;
 .status-failure {
   color: red;
 }
+
+
+
 

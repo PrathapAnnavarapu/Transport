@@ -10,7 +10,6 @@ const Mainmenu = () => {
 
   const [selectedItems, setSelectedItems] = useState([]);
   const [bulkFormat, setBulkFormat] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [filter, setFilter] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [pendingBulkFormat, setPendingBulkFormat] = useState('');
@@ -21,7 +20,9 @@ const Mainmenu = () => {
     { id: 1, name: '23466444', date: '2024-12-01', finalDate: '2024-12-15'  },
     { id: 2, name: '89977484', date: '2024-10-02', finalDate: '2024-12-16' },
     { id: 3, name: '45669998', date: '2024-09-03', finalDate: '2024-12-17' },
-    // Add more items as needed
+    { id: 4, name: '67434667', date: '2024-06-01', finalDate: '2024-12-15'  },
+    { id: 5, name: '03523455', date: '2024-08-02', finalDate: '2024-12-16' },
+    { id: 6, name: '42323566', date: '2024-05-03', finalDate: '2024-12-17' },
   ];
 
   const toConvertUSString = (newInvoiceDate) => {
@@ -37,17 +38,9 @@ const Mainmenu = () => {
   const sortedItems = useMemo(() => {
     let sortableItems = [...items];    
     return sortableItems;
-  }, [items, sortConfig]);
+  }, [items]);
 
   const filteredItems = sortedItems.filter(item => item.name.includes(filter));
-
-  // const requestSort = key => {
-  //   let direction = 'ascending';
-  //   if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-  //     direction = 'descending';
-  //   }
-  //   setSortConfig({ key, direction });
-  // };
 
  
 
@@ -135,12 +128,12 @@ const Mainmenu = () => {
   return (
     <form className='main-sidemenu'>
       <div className='action-buttons-container'>
-        <h3>Account Number : <span style={{ color: 'red' }}>78074504</span></h3>
+        <h3>Account Number : <span style={{ color: 'red' , zIndex:1}}>78074504</span></h3>
         <Button type='button' className='secondary-button' text='Submit' />
       </div>
       <input
         type="text"
-        placeholder="Filter..."
+        placeholder="Search invoice number..."
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
         className='search-input'
