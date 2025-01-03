@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import ToastComponent from '../Components/Toast';
-import Button from '../Components/Button';
+import ToastComponent from '../../Components/Toast';
+import Button from '../../Components/Button';
 
 
 const Authentication = () => {
-
+   const Navigate = useNavigate()
     const [accountOptions ]= useState(['account option1', 'account option2']);
     const { success, error } = ToastComponent();
 
@@ -15,6 +16,7 @@ const Authentication = () => {
     });
     const [credentialsError, setCredentialsError] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -101,6 +103,7 @@ const Authentication = () => {
                     type="submit"
                     className="primary-button"
                     text={isLoading ? "Loading..." : 'Submit'}
+                    onClick = {()=> Navigate('/Hughesnetwork/Management/Invoices/Upload')}
                 />
             </form>
         </div>

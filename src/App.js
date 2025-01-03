@@ -11,12 +11,12 @@ import Loader from './Components/Loader';
 import ToastComponent from './Components/Toast';
 import './App.css';
 
-const Login = lazy(() => import('./Pages/Authuntication'));
-const Mainmenu = lazy(() => import('./Pages/Mainmenu'));
+const InvoiceUploadAuthuntication = lazy(() => import('./Pages/Invoices/UploadAuthuntication'));
+const Invoices = lazy(() => import('./Pages/Invoices/Invoices'));
 const Header = lazy(() => import('./Components/Header'));
-const Main = lazy(() => import('./Pages/Main'));
-const Status = lazy(() => import('./Pages/Status'));
+const Status = lazy(() => import('./Pages/Invoices/UploadStatus'));
 const Dashboard = lazy(() => import('./Pages/Dashboard'))
+const Login = lazy(()=> import('./Pages/Login')) 
 
 function AppContent() {
   const { error } = ToastComponent();
@@ -46,17 +46,16 @@ function AppContent() {
             <section>
               <Routes>
                 <Route path='/Hughesnetwork/Management/Dashboard' element={<Dashboard />} key={location.pathname} />
-                <Route path='/Hughesnetwork/Management/Invoices' element={<Mainmenu />} key={location.pathname} />                
-                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />
-                <Route path='/Hughesnetwork/Management/Billing' element={<Status />} key={location.pathname} />
-                <Route path='/Hughesnetwork/Management/Billing/Accounts' element={<Status />} key={location.pathname} />
+                <Route path='/Hughesnetwork/Management/Invoices/Upload/Authuntication' element={<InvoiceUploadAuthuntication />} key={location.pathname}/> 
+                <Route path='/Hughesnetwork/Management/Invoices/Upload' element={<Invoices/>} key={location.pathname} />                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />
+                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />
                 <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Home' replace />} />
               </Routes>
             </section>
           </>
         ) : (
           <Routes>
-            <Route path='/Hughesnetwork/Management/Authentication' element={<Login />} />
+            <Route path='/Hughesnetwork/Management/Authentication' element={<Login/>} />
             <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Authentication' replace />} />
           </Routes>
         )}

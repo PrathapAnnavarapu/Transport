@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MdCircleNotifications } from "react-icons/md";
 import { AiFillQuestionCircle } from "react-icons/ai";
-import Button from './Button';
 
 const menuItems = [
     { title: 'Home', path: '/Hughesnetwork/Management/Dashboard' },
@@ -16,24 +15,15 @@ const Header = () => {
     const location = useLocation();
     const [active, setActive] = useState(menuItems[0].title);
 
-    // Log active tab for debugging
-    console.log(active);
-
-    const handleNavigation = (path, e) => {
-        // Prevent the click from bubbling up to parent <li> when it's a submenu item
-        e.stopPropagation();
-
-        // Set the active state based on the path
+    const handleNavigation = (path) => {
         const activeItem = menuItems.find(item => item.path === path);
         if (activeItem) {
             setActive(activeItem.title);
         }
-        // Navigate to the given path
         navigate(path);
     };
 
     useEffect(() => {
-        // Set active menu item based on the current location (path)
         const currentPath = location.pathname;
         const activeItem = menuItems.find(item => currentPath.includes(item.path));
         if (activeItem) {
@@ -58,26 +48,38 @@ const Header = () => {
                 <ul>
                     {menuItems.map((item) => (
                         <li 
-                            key={item.title} 
-                            onClick={(e) => handleNavigation(item.path, e)} 
+                            key={item.title}
+                            onMouseEnter={() => setActive(item.title)}
+                            onMouseLeave={() => setActive('')}
                             className={item.title === active ? 'activeTabClass' : 'inactiveTabClass'}
                         >
                             <span>{item.icon}</span>
                             <h3>{item.title}</h3>
+                            
+                            {/* Invoices Submenu (show on hover) */}
                             {item.title === 'Invoices' && active === 'Invoices' && (
                                 <div className="reports-submenu">
                                     <ul>
-                                        <li onClick={(e) => handleNavigation('/Hughesnetwork/Management/Invoices/Status', e)}>Status</li>
-                                        <li onClick={(e) => handleNavigation('/Hughesnetwork/Management/Invoices/Summary', e)}>Summary</li>
-                                        <li onClick={(e) => handleNavigation('/Hughesnetwork/Management/Invoices/Department', e)}>Department</li>
+                                        <li>Load Invoices
+                                            {/* Nested submenu for "Load Invoices" */}
+                                            <div className="reports-sub-submenu">
+                                                <ul>
+                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Upload/Authuntication')}>Upload</li>
+                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Status')}>Status</li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>Summary</li>
+                                        <li>Department</li>
                                     </ul>
                                 </div>
-                            )}
+                            )}                            
+                            {/* Billing Submenu (show on hover) */}
                             {item.title === 'Billing' && active === 'Billing' && (
                                 <div className="more-submenu">
                                     <ul>
-                                        <li onClick={(e) => handleNavigation('/Hughesnetwork/Management/Billing/Accounts', e)}>Accounts</li>
-                                        <li onClick={(e) => handleNavigation('/Hughesnetwork/Management/Billing/CostCenters', e)}>Cost Centers</li>
+                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Accounts')}>Accounts</li>
+                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/CostCenters')}>Cost Centers</li>
                                     </ul>
                                 </div>
                             )}

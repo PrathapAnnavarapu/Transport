@@ -1,20 +1,19 @@
 import React, { useState, useMemo } from 'react';
-import Popup from '../Components/Model';
-import Button from '../Components/Button';
-import Toast from '../Components/Toast';
-import Table from '../Components/Table'; // Adjust the import path as necessary
+import Popup from '../../Components/Model';
+import Button from '../../Components/Button';
+import Toast from '../../Components/Toast';
+import Table from '../../Components/Table'; // Adjust the import path as necessary
+import { useNavigate } from 'react-router-dom';
 // import './StatusTable.css'; // Import the CSS file for status styling
 
 const Mainmenu = () => {
   const { warn } = Toast();
-
+  const Navigate = useNavigate()
   const [selectedItems, setSelectedItems] = useState([]);
   const [bulkFormat, setBulkFormat] = useState('');
   const [filter, setFilter] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [pendingBulkFormat, setPendingBulkFormat] = useState('');
-
-  console.log(selectedItems);
 
   const items = [
     { id: 1, name: '23466444', date: '2024-12-01', finalDate: '2024-12-15'  },
@@ -129,7 +128,10 @@ const Mainmenu = () => {
     <form className='main-sidemenu'>
       <div className='action-buttons-container'>
         <h3>Account Number : <span style={{ color: 'red' , zIndex:1}}>78074504</span></h3>
-        <Button type='button' className='secondary-button' text='Submit' />
+        <div>
+        <Button type='button' className='secondary-button' text='Close'  onClick={()=> Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication')}/>
+        <Button type='button' className='secondary-button' text='Upload' />
+        </div>
       </div>
       <input
         type="text"
