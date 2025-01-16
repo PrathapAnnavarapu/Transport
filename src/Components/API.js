@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import Loader from './Loader'
-import ToastComponent from '../Components/Toast'
+import Loader from './Loader';
+import ToastComponent from '../Components/Toast';
 
 const ApiComponent = ({ method, url, postData, render }) => {
-  const { error } = ToastComponent()
+  const { error } = ToastComponent();
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(true); // To handle component unmount
 
   const fetchData = useCallback(async () => {
     try {
       const token = Cookies.get('jwt_token');
-      const endPoint = `http://vmwhnstemdev01.nadops.net:8080/${url}`;
+      const endPoint = `http://127.0.0.1:5000/${url}`;
       const config = {
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ const ApiComponent = ({ method, url, postData, render }) => {
           response = await axios.put(endPoint, postData, config);
           break;
         case 'DELETE':
-          response = await axios.delete(endPoint, config); 
+          response = await axios.delete(endPoint, config);
           break;
         default:
           throw new Error(`Unsupported method: ${method}`);
@@ -44,11 +44,11 @@ const ApiComponent = ({ method, url, postData, render }) => {
       if (isMounted) {
         setLoading(false);
         render(response);
-
       }
     } catch (err) {
       if (isMounted) {
-        error(err.response.data.message)
+        const errorMessage = err.response?.data?.message || 'An unexpected error occurred';
+        error(errorMessage);
         setLoading(false);
       }
     }
@@ -62,12 +62,7 @@ const ApiComponent = ({ method, url, postData, render }) => {
   }, [fetchData]);
 
   if (loading) return <div><Loader /></div>;
-  // if (error) return <div>Error: {error.message}</div>;
   return null;
 };
 
 export default React.memo(ApiComponent);
-
-
-// http://vmwhnstemdev01.nadops.net:8080/
-// http://localhost:8080/
