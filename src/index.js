@@ -13,9 +13,8 @@ root.render(
   <React.StrictMode>
       {/* <Provider store={Store}> */}
       <App />
-      <ToastContainer/>
-      {/* </Provider>        */}
-   
+      <ToastContainer/>       
+      {/* </Provider>        */}   
   </React.StrictMode>
 );
 

@@ -3,27 +3,20 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import ToastComponent from '../../Components/Toast';
 import Button from '../../Components/Button';
+import ApiComponent from '../../Components/API'
 
 
 const Authentication = () => {
    const Navigate = useNavigate()
-    const [accountOptions ]= useState(['account option1', 'account option2']);
-    const { success, error } = ToastComponent();
-
-    const [credentials, setCredentials] = useState({
-        accountNumber: '',
-        
-    });
+   const { success, error } = ToastComponent();
+    const [accountNoList, setAccountNoList ]= useState(['account option1', 'account option2']);
+    const [accountNumber, setAccountNumber] = useState('');
     const [credentialsError, setCredentialsError] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCredentials((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        setAccountNumber(e.target.value)
     };
 
     const sendCredentialsToDB = async (msg) => {
@@ -36,7 +29,7 @@ const Authentication = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(credentials),
+                body: JSON.stringify(accountNumber),
             };
 
             try {
@@ -74,13 +67,22 @@ const Authentication = () => {
 
     const checkCredentialsBeforeToSendToDB = (e) => {
         e.preventDefault();
-        let errorMessage = checktheCredentials(credentials);
+        let errorMessage = checktheCredentials(accountNumber);
         sendCredentialsToDB(errorMessage);
         setCredentialsError(errorMessage);
     };
 
+    
+
     return (
-        <div className="authuntication-main">
+        <div className="authuntication-main">           
+            {accountNoList.length === 0 && (
+                <ApiComponent
+                method='GET'
+                url='api/invoices/all'
+                render={(response) => setAccountNoList(response.data)}
+                />
+            )}
             <form className="login-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>   
             {credentialsError.msg && <h4 className="error-msg">{credentialsError.msg}</h4>}         
                 <div className="input-field-container">
@@ -91,10 +93,10 @@ const Authentication = () => {
                         name="accountNumber"
                         onChange={handleChange}
                         placeholder="Account Number"
-                        value={credentials.accountNumber}
+                        value={accountNumber}
                     />
                     <datalist id="account">                        
-                        {accountOptions.map((option, index) => (
+                        {accountNoList.map((option, index) => (
                             <option key={index} value={option} />
                         ))}
                     </datalist>

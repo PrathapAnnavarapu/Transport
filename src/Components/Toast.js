@@ -1,7 +1,7 @@
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-toastify/dist/ReactToastify.min.css';
+// import 'react-toastify/dist/ReactToastify.min.css';
 
 const ToastComponent = () => {
     return {

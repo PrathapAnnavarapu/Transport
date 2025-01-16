@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -7,8 +7,8 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import Cookies from 'js-cookie'
 import Loader from './Components/Loader';
-import ToastComponent from './Components/Toast';
 import './App.css';
 
 const InvoiceUploadAuthuntication = lazy(() => import('./Pages/Invoices/UploadAuthuntication'));
@@ -19,10 +19,19 @@ const Dashboard = lazy(() => import('./Pages/Dashboard'))
 const Login = lazy(()=> import('./Pages/Login')) 
 
 function AppContent() {
-  const { error } = ToastComponent();
-  const isAuthenticated = true; // This should be dynamically set based on your authentication logic
+  const Jwt = Cookies.get('jwt_token')
   const location = useLocation();
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // This should be dynamically set based on your authentication logic
+
+
+  useEffect(()=>{
+    if (Jwt !== undefined){
+    setIsAuthenticated(true)
+    }else{
+    setIsAuthenticated(false)
+    }
+  }, [Jwt])
 
   useEffect(() => {
     // Save the current path to local storage
@@ -36,6 +45,8 @@ function AppContent() {
       navigate(lastPath, { replace: true });
     }
   }, [navigate]);
+
+  
 
   return (
     <Suspense fallback={<Loader />}>
@@ -55,8 +66,8 @@ function AppContent() {
           </>
         ) : (
           <Routes>
-            <Route path='/Hughesnetwork/Management/Authentication' element={<Login/>} />
-            <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Authentication' replace />} />
+            <Route path='/Hughesnetwork/Management/Login' element={<Login/>} />
+            <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Login' replace />} />
           </Routes>
         )}
       </div>
