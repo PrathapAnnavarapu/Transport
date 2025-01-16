@@ -5,13 +5,13 @@ import Toast from '../../Components/Toast';
 import Table from '../../Components/Table'; // Adjust the import path as necessary
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import ApiComponent from '../../Components/API'
+import ApiComponent from '../../Components/API';
 
 const Mainmenu = () => {
-  const dispatch = useDispatch()
-  const accountNumber = useSelector((state)=> state.Account)
+  const dispatch = useDispatch();
+  const accountNumber = useSelector((state) => state.Account) || null;
   const { warn, info, error, success } = Toast();
-  const Navigate = useNavigate()
+  const Navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState([]);
   const [bulkFormat, setBulkFormat] = useState('');
   const [filter, setFilter] = useState('');
@@ -31,18 +31,16 @@ const Mainmenu = () => {
   };
 
   const sortedItems = useMemo(() => {
-    let sortableItems = [...invoices];    
+    let sortableItems = [...invoices];
     return sortableItems;
   }, [invoices]);
 
-  const filteredItems = sortedItems.filter(item => item.invoiceNo.includes(filter));
-
- 
+  const filteredItems = sortedItems.filter((item) => item.invoiceNo.includes(filter));
 
   const handleCheckboxChange = (item) => {
-    const existingItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
+    const existingItem = selectedItems.find((selectedItem) => selectedItem.id === item.id);
     if (existingItem) {
-      setSelectedItems(selectedItems.filter(selectedItem => selectedItem.id !== item.id));
+      setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.id !== item.id));
     } else {
       if (item.fileFormat) {
         setSelectedItems([...selectedItems, item]);
@@ -54,12 +52,10 @@ const Mainmenu = () => {
 
   const handleChangeOption = (e, id) => {
     const newFormat = e.target.value;
-    const item = invoices.find(item => item.id === id);
+    const item = invoices.find((item) => item.id === id);
     const updatedItem = { ...item, fileFormat: newFormat };
-    const updatedItems = selectedItems.map(item =>
-      item.id === id ? updatedItem : item
-    );
-    if (!updatedItems.find(item => item.id === id)) {
+    const updatedItems = selectedItems.map((item) => (item.id === id ? updatedItem : item));
+    if (!updatedItems.find((item) => item.id === id)) {
       updatedItems.push(updatedItem);
     }
     setSelectedItems(updatedItems);
@@ -73,75 +69,73 @@ const Mainmenu = () => {
 
   const handleConfirmBulkSelection = () => {
     setBulkFormat(pendingBulkFormat);
-    const updatedItems = invoices.map(item => ({ ...item, fileFormat: pendingBulkFormat }));
+    const updatedItems = invoices.map((item) => ({ ...item, fileFormat: pendingBulkFormat }));
     setSelectedItems(updatedItems);
     setIsPopupOpen(false);
   };
 
-  const headers = ['Select', 'Invoice Number', 'Invoice ID', 'Invoice Date', 'Invoice Final Date', 'Amount', 'File Format',];
+  const headers = ['Select', 'Invoice Number', 'Invoice ID', 'Invoice Date', 'Invoice Final Date', 'Amount', 'File Format'];
 
-  const rowData = filteredItems.map(item => ({
+  const rowData = filteredItems.map((item) => ({
     'Select': (
       <input
         type="checkbox"
-        checked={selectedItems.some(selectedItem => selectedItem.id === item.id)}
+        checked={selectedItems.some((selectedItem) => selectedItem.id === item.id)}
         onChange={() => handleCheckboxChange(item)}
-        className='checkbox-class'
-        disabled={!selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat}
+        className="checkbox-class"
+        disabled={!selectedItems.find((selectedItem) => selectedItem.id === item.id)?.fileFormat}
       />
     ),
     'Invoice Number': item.INVOICE_NO,
     'Invoice ID': item.INVOICE_ID,
-    'Amount':item.AMOUNT,
+    'Amount': item.AMOUNT,
     'Invoice Date': toConvertUSString(item.INVOICE_DATE),
-    'Invoice Final Date': toConvertUSString(item.finalDate),   
+    'Invoice Final Date': toConvertUSString(item.finalDate),
     'File Format': (
-      <div className='radio-buttons-container'>
+      <div className="radio-buttons-container">
         <div>
           <input
-            type='radio'
+            type="radio"
             name={`option-${item.id}`}
-            value='Excel'
-            checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'Excel'}
+            value="Excel"
+            checked={selectedItems.find((selectedItem) => selectedItem.id === item.id)?.fileFormat === 'Excel'}
             onChange={(e) => handleChangeOption(e, item.id)}
           />
           <label>Excel</label>
         </div>
         <div>
           <input
-            type='radio'
+            type="radio"
             name={`option-${item.id}`}
-            value='PDF'
-            checked={selectedItems.find(selectedItem => selectedItem.id === item.id)?.fileFormat === 'PDF'}
+            value="PDF"
+            checked={selectedItems.find((selectedItem) => selectedItem.id === item.id)?.fileFormat === 'PDF'}
             onChange={(e) => handleChangeOption(e, item.id)}
           />
           <label>PDF</label>
         </div>
       </div>
-    )
+    ),
   }));
 
-  const handleUploadTheInvoiceApiResponse = (response)=>{
+  const handleUploadTheInvoiceApiResponse = (response) => {
     if (response.status === 200) {
-      success('Invoices are uploaded Successfully');     
-  } else if (response.status === 400) {
+      success('Invoices are uploaded Successfully');
+    } else if (response.status === 400) {
       error(response.data.message || 'Failed to Save Invoices');
-  }
-  }
-
+    }
+  };
 
   const uploadAutomation = async () => {
     if (selectedItems.length !== 0) {
-        info('Your invoices are uploading, please wait...');   
-          setApiProps({
-          method: 'POST',
-          url: '/api/run-test',
-          postData: selectedItems,
-          render: handleUploadTheInvoiceApiResponse,
+      info('Your invoices are uploading, please wait...');
+      setApiProps({
+        method: 'POST',
+        url: '/api/run-test',
+        postData: selectedItems,
+        render: handleUploadTheInvoiceApiResponse,
       });
     }
-       
-};
+  };
 
 return (
     <form className='main-sidemenu'>
@@ -156,7 +150,7 @@ return (
       <div className='action-buttons-container'>
         <h3>Account Number : <span style={{ color: 'red' , zIndex:1}}>78074504</span></h3>
         <div>
-        <Button type='button' className='secondary-button' text='Close'  onClick={()=> {Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication');dispatch({type:'remove_account_number'})}}/>
+        <Button type='button' className='secondary-button' text='Close'  onClick={()=> {dispatch({type:'remove_account_number'});Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication')}}/>
         <Button type='button' className='secondary-button' text='Upload'  onClick={uploadAutomation} />
         </div>
       </div>
