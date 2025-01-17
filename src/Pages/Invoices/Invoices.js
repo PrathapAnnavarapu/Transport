@@ -144,7 +144,7 @@ return (
             <ApiComponent
             method='GET'
             url={`api/invoices/${accountNumber}`}
-            render={(response) => setInvoices(response)}
+            render={(response) => setInvoices(response.data)}
             />
         )}
       <div className='action-buttons-container'>

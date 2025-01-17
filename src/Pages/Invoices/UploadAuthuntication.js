@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import ToastComponent from '../../Components/Toast';
@@ -6,30 +6,15 @@ import Button from '../../Components/Button';
 import ApiComponent from '../../Components/API';
 
 const Authentication = () => {
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
   const dispatch = useDispatch();
   const { success, error } = ToastComponent();
   const [accountNoList, setAccountNoList] = useState([]);
-  const [accountNumber, setAccountNumber] = useState('');
+  const [accountNumber, setAccountNumber] = useState(null);
   const [credentialsError, setCredentialsError] = useState({});
   const [isLoading, setIsLoading] = useState(false); 
 
-  useEffect(() => {
-    const fetchAccountNumbers = async () => {
-      try {
-        const response = await fetch('api/all_account_numbers');
-        const data = await response.json();
-        console.log('Fetched data:', data); // Debugging line
-        setAccountNoList(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error('Failed to fetch account numbers', err);
-      }
-    };
-
-    fetchAccountNumbers();
-  }, []);
-
-  const checkTheCredentials = (details) => {
+  const checktheCredentials = (details) => {
     let errorObject = {};
     if (!details) {
       errorObject.msg = 'Account number should not be empty';
@@ -39,21 +24,29 @@ const Authentication = () => {
 
   const getInvoices = (msg) => {
     if (Object.keys(msg).length === 0) {
-      console.log(accountNumber);
-      dispatch({ type: 'Add_account_number', payload: accountNumber });
-      navigate('/Hughesnetwork/Management/Invoices/Upload');
+        console.log(accountNumber)
+        dispatch({ type: 'Add_account_number', payload: accountNumber });
+        Navigate('/Hughesnetwork/Management/Invoices/Upload')
     }
   };
 
   const checkCredentialsBeforeToSendToDB = (e) => {
     e.preventDefault();
-    let errorMessage = checkTheCredentials(accountNumber);
+    let errorMessage = checktheCredentials(accountNumber);
     setCredentialsError(errorMessage);
     getInvoices(errorMessage);
   };
 
   return (
-    <div className="authentication-main">
+    <div className="authuntication-main">
+      {accountNoList.length === 0 && (
+        <ApiComponent
+          method='GET'
+          url='api/all_account_numbers'
+          render={(response) => {setAccountNoList(response.data); console.log(response)}}
+         
+        />
+      )}
       <form className="login-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
         {credentialsError.msg && <h4 className="error-msg">{credentialsError.msg}</h4>}
         <div className="input-field-container">
@@ -67,10 +60,10 @@ const Authentication = () => {
             value={accountNumber}
           />
           <datalist id="accountNoList">
-            {accountNoList.map((option, index) => (
-              <option key={index} value={option.ACCOUNT_NO} />
+            {(Array.isArray(accountNoList) ? accountNoList : []).map((option, index) => (
+                <option key={index} value={option.ACCOUNT_NO} />
             ))}
-          </datalist>
+            </datalist>
         </div>
         <Button
           type="submit"
