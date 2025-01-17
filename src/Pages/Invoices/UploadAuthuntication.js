@@ -58,7 +58,7 @@ const Authentication = () => {
             placeholder="Account Number"
             value={accountNumber}
           />
-          <datalist id="account">
+          <datalist id="accountNoList">
             {accountNoList.map((option, index) => (
               <option key={index} value={option.ACCOUNT_NO} />
             ))}
