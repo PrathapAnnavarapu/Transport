@@ -97,10 +97,10 @@ const Mainmenu = () => {
         <div>
           <input
             type="radio"
-            name={`option-${item.id}`}
+            name={`option-${item.INVOICE_ID}`}
             value="Excel"
-            checked={selectedItems.find((selectedItem) => selectedItem.id === item.id)?.fileFormat === 'Excel'}
-            onChange={(e) => handleChangeOption(e, item.id)}
+            checked={selectedItems.find((selectedItem) => selectedItem.INVOICE_ID === item.INVOICE_ID)?.fileFormat === 'Excel'}
+            onChange={(e) => handleChangeOption(e, item.INVOICE_ID)}
           />
           <label>Excel</label>
         </div>
@@ -109,8 +109,8 @@ const Mainmenu = () => {
             type="radio"
             name={`option-${item.id}`}
             value="PDF"
-            checked={selectedItems.find((selectedItem) => selectedItem.id === item.id)?.fileFormat === 'PDF'}
-            onChange={(e) => handleChangeOption(e, item.id)}
+            checked={selectedItems.find((selectedItem) => selectedItem.INVOICE_ID === item.INVOICE_ID)?.fileFormat === 'PDF'}
+            onChange={(e) => handleChangeOption(e, item.INVOICE_ID)}
           />
           <label>PDF</label>
         </div>
