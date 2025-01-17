@@ -9,7 +9,7 @@ import ApiComponent from '../../Components/API';
 
 const Mainmenu = () => {
   const dispatch = useDispatch();
-  const accountNumber = useSelector((state) => state.Account) || null;
+  const accountNumber = useSelector((state) => state.Account.accountNumber) || null; 
   const { warn, info, error, success } = Toast();
   const Navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState([]);
@@ -144,13 +144,13 @@ return (
             <ApiComponent
             method='GET'
             url={`api/invoices/${accountNumber}`}
-            render={(response) => setInvoices(response.data)}
+            render={(response) => setInvoices(response)}
             />
         )}
       <div className='action-buttons-container'>
-        <h3>Account Number : <span style={{ color: 'red' , zIndex:1}}>78074504</span></h3>
+        <h3>Account Number : <span style={{ color: 'red' , zIndex:1}}>{accountNumber}</span></h3>
         <div>
-        <Button type='button' className='secondary-button' text='Close'  onClick={()=> {dispatch({type:'remove_account_number'});Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication')}}/>
+        <Button type='button' className='secondary-button' text='Close'  onClick={()=> {dispatch({type:'Clear_account_number'});Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication')}}/>
         <Button type='button' className='secondary-button' text='Upload'  onClick={uploadAutomation} />
         </div>
       </div>

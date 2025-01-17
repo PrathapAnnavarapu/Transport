@@ -10,13 +10,9 @@ const Authentication = () => {
   const dispatch = useDispatch();
   const { success, error } = ToastComponent();
   const [accountNoList, setAccountNoList] = useState([]);
-  const [accountNumber, setAccountNumber] = useState('');
+  const [accountNumber, setAccountNumber] = useState(null);
   const [credentialsError, setCredentialsError] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setAccountNumber(e.target.value);
-  };
+  const [isLoading, setIsLoading] = useState(false); 
 
   const checktheCredentials = (details) => {
     let errorObject = {};
@@ -28,6 +24,7 @@ const Authentication = () => {
 
   const getInvoices = (msg) => {
     if (Object.keys(msg).length === 0) {
+        console.log(accountNumber)
         dispatch({ type: 'Add_account_number', payload: accountNumber });
         Navigate('/Hughesnetwork/Management/Invoices/Upload')
     }
@@ -46,7 +43,7 @@ const Authentication = () => {
         <ApiComponent
           method='GET'
           url='api/all_account_numbers'
-          render={(response) => setAccountNoList(response.data)}
+          render={(response) => setAccountNoList(response)}
         />
       )}
       <form className="login-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
@@ -54,10 +51,10 @@ const Authentication = () => {
         <div className="input-field-container">
           <label htmlFor="accountNumber">Account Number <span className="mandatory">*</span></label><br />
           <input
-            list="account"
+            list="accountNoList"
             id="accountNumber"
             name="accountNumber"
-            onChange={handleChange}
+            onChange={(e) => setAccountNumber(e.target.value)}
             placeholder="Account Number"
             value={accountNumber}
           />

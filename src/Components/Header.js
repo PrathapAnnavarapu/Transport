@@ -22,7 +22,6 @@ const Header = () => {
     const [active, setActive] = useState(menuItems[0].title);
     const [isLogoutClicked, setIsLogoutClicked] = useState(false);
     const [userDetails, setUserDetails] = useState({})
-    console.log(userDetails)
 
     const handleNavigation = (path) => {
         const activeItem = menuItems.find(item => item.path === path);
