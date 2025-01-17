@@ -76,7 +76,7 @@ const Mainmenu = () => {
     setIsPopupOpen(false);
   };
 
-  const headers = ['Select', 'Invoice Number', 'Invoice ID', 'Invoice Date', 'Invoice Final Date', 'Amount', 'File Format'];
+  const headers = ['Select', 'Invoice Number', 'Invoice ID', 'Invoice Date', 'Amount', 'File Format'];
 
   const rowData = filteredItems.map((item) => ({
     'Select': (
@@ -91,8 +91,7 @@ const Mainmenu = () => {
     'Invoice Number': item.INVOICE_NO,
     'Invoice ID': item.INVOICE_ID,
     'Amount': item.AMOUNT,
-    'Invoice Date': toConvertUSString(item.INVOICE_DATE),
-    'Invoice Final Date': toConvertUSString(item.finalDate),
+    'Invoice Date': toConvertUSString(item.INVOICE_DATE),    
     'File Format': (
       <div className="radio-buttons-container">
         <div>
