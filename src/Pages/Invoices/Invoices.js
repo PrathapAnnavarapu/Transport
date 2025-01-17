@@ -35,7 +35,9 @@ const Mainmenu = () => {
     return sortableItems;
   }, [invoices]);
 
-  const filteredItems = sortedItems.filter((item) => item.invoiceNo.includes(filter));
+  
+  const filteredItems = Array.isArray(sortedItems) ? sortedItems.filter((item) => (item.invoiceNo || '').includes(filter)) : [];
+
 
   const handleCheckboxChange = (item) => {
     const existingItem = selectedItems.find((selectedItem) => selectedItem.id === item.id);
@@ -144,7 +146,7 @@ return (
             <ApiComponent
             method='GET'
             url={`api/invoices/${accountNumber}`}
-            render={(response) => setInvoices(response.data)}
+            render={(response) => {setInvoices(response.data); console.log(response)}}
             />
         )}
       <div className='action-buttons-container'>

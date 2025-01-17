@@ -24,7 +24,7 @@ const Authentication = () => {
 
   const getInvoices = (msg) => {
     if (Object.keys(msg).length === 0) {
-        console.log(accountNumber)
+        
         dispatch({ type: 'Add_account_number', payload: accountNumber });
         Navigate('/Hughesnetwork/Management/Invoices/Upload')
     }
@@ -43,7 +43,7 @@ const Authentication = () => {
         <ApiComponent
           method='GET'
           url='api/all_account_numbers'
-          render={(response) => {setAccountNoList(response.data); console.log(response)}}
+          render={(response) => {setAccountNoList(response.data)}}
          
         />
       )}
