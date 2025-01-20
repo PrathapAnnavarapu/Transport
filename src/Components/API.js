@@ -47,21 +47,25 @@ const ApiComponent = ({ method, url, postData, render }) => {
       }
     } catch (err) {
       if (isMounted) {
-        const errorMessage = err.response?.data?.message || 'An unexpected error occurred';
-        error(errorMessage);
+        error(err?.message);
         setLoading(false);
       }
     }
-  }, [method, url, postData, render, isMounted]);
+  }, [method, url, postData, render, isMounted]); // Avoid isMounted here
 
   useEffect(() => {
-    setIsMounted(true);
-    fetchData();
+    setIsMounted(true); // Component mounted
+    fetchData(); // Fetch data when component mounts
 
-    return () => setIsMounted(false); // Clean up on unmount
-  }, [fetchData]);
+    return () => {
+      setIsMounted(false); // Clean up when component unmounts
+    };
+  }, [fetchData]); // Only depend on fetchData callback
 
   if (loading) return <div><Loader /></div>;
+  // Uncomment if you need to display errors
+  // if (error) return <div>Error: {error.message}</div>;
+
   return null;
 };
 

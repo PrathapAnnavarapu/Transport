@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Popup from '../../Components/Model';
 import Button from '../../Components/Button';
 import Table from '../../Components/Table';
@@ -18,7 +18,8 @@ const Mainmenu = () => {
   const [filter, setFilter] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [pendingBulkFormat, setPendingBulkFormat] = useState('');
-  const [apiProps, setApiProps] = useState(null);  
+  const [apiProps, setApiProps] = useState(null);
+  const [isUploading, setIsUploading] = useState(false); // New loading state
   const [invoices, setInvoices] = useState([]);
 
   const toConvertUSString = (newInvoiceDate) => {
@@ -78,7 +79,13 @@ const Mainmenu = () => {
     setIsPopupOpen(false);
   };
 
-  const headers = ['Select', 'Invoice Number', 'Invoice ID', 'Invoice Date', 'Invoice Final Date', 'File Format'];
+  const headers = [
+    'Select',
+    'Invoice Number',
+    'Invoice ID',
+    'Invoice Date',
+    'File Format'
+  ];
 
   const rowData = filteredItems.map(item => ({
     'Select': (
@@ -86,14 +93,13 @@ const Mainmenu = () => {
         type="checkbox"
         checked={selectedItems.some(selectedItem => selectedItem.INVOICE_NO === item.INVOICE_NO)}
         onChange={() => handleCheckboxChange(item)}
-        className='checkbox-class'
+        className="checkbox-class"
         disabled={!selectedItems.find(selectedItem => selectedItem.INVOICE_NO === item.INVOICE_NO)?.FILE_FORMAT}
       />
     ),
     'Invoice Number': item.INVOICE_NO,
     'Invoice ID': item.INVOICE_NO,
     'Invoice Date': toConvertUSString(item.INVOICE_DATE),
-    'Invoice Final Date': toConvertUSString(item.FINAL_DATE),
     'File Format': (
       <div className='radio-buttons-container'>
         <div>
@@ -120,24 +126,29 @@ const Mainmenu = () => {
     )
   }));
 
-
   const handleUploadTheInvoiceApiResponse = (response) => {
+    setIsUploading(false); // Reset loading state
     if (response.status === 200) {
-      success('Invoices are uploaded Successfully');
+      success('Invoices are uploaded successfully');
     } else if (response.status === 400) {
-      error(response.data.message || 'Failed to Save Invoices');
+      error(response.data.message || 'Failed to upload invoices');
     }
   };
 
   const uploadAutomation = async () => {
-    if (selectedItems.length !== 0) {
+    setIsUploading(true);
+    if (selectedItems.length !== 0) { // Prevent multiple uploads
       info('Your invoices are uploading, please wait...');
+
       setApiProps({
         method: 'POST',
         url: 'api/save_invoice',
         postData: selectedItems,
         render: handleUploadTheInvoiceApiResponse,
       });
+    } else {
+      setIsUploading(false);
+      warn('Upload is already in progress. Please wait.');
     }
   };
 
@@ -148,7 +159,7 @@ const Mainmenu = () => {
         <ApiComponent
           method='GET'
           url={`api/invoices/${accountNumber}`}
-          render={(response) => setInvoices(response.data)}
+          render={(response) => { response.data && setInvoices(response.data) }}
         />
       )}
       <div className='action-buttons-container'>
@@ -158,6 +169,7 @@ const Mainmenu = () => {
           <Button type='button' className='secondary-button' text='Upload' onClick={uploadAutomation} />
         </div>
       </div>
+
       <input
         type="text"
         placeholder="Search invoice number..."
@@ -165,6 +177,7 @@ const Mainmenu = () => {
         onChange={(e) => setFilter(e.target.value)}
         className='search-input'
       />
+
       <div className='invoice-numbers-list'>
         <div className='bulk-selection-container'>
           <h4>Bulk Selection of File Format:</h4>
@@ -189,6 +202,7 @@ const Mainmenu = () => {
             <label>PDF</label>
           </div>
         </div>
+
         <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
           <h6 className='pop-up-text'>Do you want to select {pendingBulkFormat} to all?</h6>
           <div className='status-buttons'>
@@ -196,6 +210,7 @@ const Mainmenu = () => {
             <Button type='button' className='primary-button' text='No' onClick={() => setIsPopupOpen(false)} />
           </div>
         </Popup>
+
         <div className='table-container'>
           <Table headers={headers} rowData={rowData} />
         </div>
