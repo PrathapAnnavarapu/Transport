@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import ToastComponent from '../../Components/Toast';
 import Button from '../../Components/Button';
 import ApiComponent from '../../Components/API';
 
 const Authentication = () => {
     const Navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { success, error } = ToastComponent();
+    const dispatch = useDispatch();    
     const [accountNoList, setAccountNoList] = useState([]);
     const [accountNumber, setAccountNumber] = useState(null);
     const [credentialsError, setCredentialsError] = useState({});

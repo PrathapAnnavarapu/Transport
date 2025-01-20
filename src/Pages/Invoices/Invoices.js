@@ -137,7 +137,7 @@ const Mainmenu = () => {
 
   const uploadAutomation = async () => {
     setIsUploading(true);
-    if (selectedItems.length !== 0) { // Prevent multiple uploads
+    if (selectedItems.length !== 0 && isUploading === true) { // Prevent multiple uploads
       info('Your invoices are uploading, please wait...');
 
       setApiProps({
@@ -148,7 +148,7 @@ const Mainmenu = () => {
       });
     } else {
       setIsUploading(false);
-      warn('Upload is already in progress. Please wait.');
+      error('Upload is failed');
     }
   };
 
