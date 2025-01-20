@@ -12,7 +12,6 @@ const Mainmenu = () => {
   const accountNumber = useSelector((state) => state.Account.accountNumber) || null;
   const { warn, info, error, success } = Toast();
   const Navigate = useNavigate();
-
   const [selectedItems, setSelectedItems] = useState([]);
   const [bulkFormat, setBulkFormat] = useState('');
   const [filter, setFilter] = useState('');
@@ -20,6 +19,7 @@ const Mainmenu = () => {
   const [pendingBulkFormat, setPendingBulkFormat] = useState('');
   const [apiProps, setApiProps] = useState(null);
   const [isUploading, setIsUploading] = useState(false); // New loading state
+  const [selectAll, setSelectAll] = useState(false);
   const [invoices, setInvoices] = useState([]);
 
   const toConvertUSString = (newInvoiceDate) => {
@@ -69,7 +69,6 @@ const Mainmenu = () => {
   const handleBulkFormatChange = (e) => {
     const newFormat = e.target.value;
     setPendingBulkFormat(newFormat);
-    setIsPopupOpen(true);
   };
 
   const handleConfirmBulkSelection = () => {
@@ -77,14 +76,24 @@ const Mainmenu = () => {
     const updatedItems = invoices.map(item => ({ ...item, FILE_FORMAT: pendingBulkFormat }));
     setSelectedItems(updatedItems);
     setIsPopupOpen(false);
+    setSelectAll(true); // Ensure the "Select All" checkbox stays checked after confirmation
+  };
+
+  const handleSelectAllChange = () => {
+    if (!selectAll) {
+      setIsPopupOpen(true); // Open the popup to select the file format
+    } else {
+      setSelectedItems([]); // Uncheck all items if "Select All" is unchecked
+      setSelectAll(false);
+    }
   };
 
   const headers = [
-    'Select',
-    'Invoice Number',
-    'Invoice ID',
-    'Invoice Date',
-    'File Format'
+    { key: 'Select', label: <input type="checkbox" checked={selectAll} onChange={handleSelectAllChange} /> },
+    { key: 'Invoice Number', label: 'Invoice Number' },
+    { key: 'Invoice ID', label: 'Invoice ID' },
+    { key: 'Invoice Date', label: 'Invoice Date' },
+    { key: 'File Format', label: 'File Format' }
   ];
 
   const rowData = filteredItems.map(item => ({
@@ -94,7 +103,7 @@ const Mainmenu = () => {
         checked={selectedItems.some(selectedItem => selectedItem.INVOICE_NO === item.INVOICE_NO)}
         onChange={() => handleCheckboxChange(item)}
         className="checkbox-class"
-        disabled={!selectedItems.find(selectedItem => selectedItem.INVOICE_NO === item.INVOICE_NO)?.FILE_FORMAT}
+        disabled={!selectedItems.find(selectedItem => selectedItem.INVOICE_NO === item.INVOICE_NO)?.FILE_FORMAT} // Disable if no format is selected
       />
     ),
     'Invoice Number': item.INVOICE_NO,
@@ -169,7 +178,6 @@ const Mainmenu = () => {
           <Button type='button' className='secondary-button' text='Upload' onClick={uploadAutomation} />
         </div>
       </div>
-
       <input
         type="text"
         placeholder="Search invoice number..."
@@ -179,32 +187,30 @@ const Mainmenu = () => {
       />
 
       <div className='invoice-numbers-list'>
-        <div className='bulk-selection-container'>
-          <h4>Bulk Selection of File Format:</h4>
-          <div>
-            <input
-              type='radio'
-              name='bulkFormat'
-              value='Excel'
-              checked={bulkFormat === 'Excel'}
-              onChange={handleBulkFormatChange}
-            />
-            <label>Excel</label>
-          </div>
-          <div>
-            <input
-              type='radio'
-              name='bulkFormat'
-              value='PDF'
-              checked={bulkFormat === 'PDF'}
-              onChange={handleBulkFormatChange}
-            />
-            <label>PDF</label>
-          </div>
-        </div>
-
         <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
-          <h6 className='pop-up-text'>Do you want to select {pendingBulkFormat} to all?</h6>
+          <h4>Please select a file format for all invoices</h4>
+          <div className='bulk-selection-container'>
+            <div>
+              <input
+                type='radio'
+                name='bulkFormat'
+                value='Excel'
+                checked={pendingBulkFormat === 'Excel'}
+                onChange={handleBulkFormatChange}
+              />
+              <label>Excel</label>
+            </div>
+            <div>
+              <input
+                type='radio'
+                name='bulkFormat'
+                value='PDF'
+                checked={pendingBulkFormat === 'PDF'}
+                onChange={handleBulkFormatChange}
+              />
+              <label>PDF</label>
+            </div>
+          </div>
           <div className='status-buttons'>
             <Button type='button' className='primary-button' text='Yes' onClick={handleConfirmBulkSelection} />
             <Button type='button' className='primary-button' text='No' onClick={() => setIsPopupOpen(false)} />

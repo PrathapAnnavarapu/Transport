@@ -111,8 +111,7 @@ body {
   z-index: 9999;
 }
 
-.popup-close-button {
-  position: absolute;
+.popup-close-button { 
   border: none;
   background-color: transparent;
   font-size: 30px;
@@ -1008,8 +1007,8 @@ body {
 
 .bulk-selection-container {
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
   padding: 10px;
   height: 8%;

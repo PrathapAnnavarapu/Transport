@@ -45,9 +45,9 @@ const Table = ({ headers, rowData }) => {
       <thead>
         <tr>
           {headers.map((header, index) => (
-            <th key={index} onClick={() => requestSort(header)}>
-              {header}
-              {sortConfig.key === header ? (sortConfig.direction === 'ascending' ? ' 🔼' : ' 🔽') : null}
+            <th key={index} onClick={() => requestSort(header.key)}>
+              {header.label}
+              {sortConfig.key === header.key ? (sortConfig.direction === 'ascending' ? ' 🔼' : ' 🔽') : null}
             </th>
           ))}
         </tr>
@@ -56,8 +56,8 @@ const Table = ({ headers, rowData }) => {
         {sortedData.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {headers.map((header, colIndex) => (
-              <td key={colIndex} className={header === 'Status' ? getStatusClass(row[header]) : ''}>
-                {row[header]}
+              <td key={colIndex} className={header.key === 'Status' ? getStatusClass(row[header.key]) : ''}>
+                {row[header.key]}
               </td>
             ))}
           </tr>
