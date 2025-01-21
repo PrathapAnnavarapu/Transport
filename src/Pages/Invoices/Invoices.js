@@ -55,8 +55,8 @@ const Mainmenu = () => {
 
   const handleChangeOption = (e, INVOICE_NO) => {
     const newFormat = e.target.value;
-    const item = invoices.find(item => item.INVOICE_NO === INVOICE_NO);
-    const updatedItem = { ...item, FILE_FORMAT: newFormat, ACCOUNT_NO: accountNumber };
+    const item = invoices.find(item => item.INVOICE_NO === INVOICE_NO);    
+    const updatedItem = { ...item, FILE_FORMAT: newFormat };
     const updatedItems = selectedItems.map(item =>
       item.INVOICE_NO === INVOICE_NO ? updatedItem : item
     );
@@ -107,7 +107,7 @@ const Mainmenu = () => {
       />
     ),
     'Invoice Number': item.INVOICE_NO,
-    'Invoice ID': item.INVOICE_NO,
+    'Invoice ID': item.INVOICE_ID,
     'Invoice Date': toConvertUSString(item.INVOICE_DATE),
     'File Format': (
       <div className='radio-buttons-container'>
@@ -212,8 +212,8 @@ const Mainmenu = () => {
             </div>
           </div>
           <div className='status-buttons'>
-            <Button type='button' className='primary-button' text='Yes' onClick={handleConfirmBulkSelection} />
-            <Button type='button' className='primary-button' text='No' onClick={() => setIsPopupOpen(false)} />
+            <Button type='button' className='primary-button' text='Ok' onClick={handleConfirmBulkSelection} />
+            <Button type='button' className='primary-button' text='Cancel' onClick={() => setIsPopupOpen(false)} />
           </div>
         </Popup>
 
