@@ -17,6 +17,7 @@ const Header = lazy(() => import('./Components/Header'));
 const Status = lazy(() => import('./Pages/Invoices/UploadStatus'));
 const Dashboard = lazy(() => import('./Pages/Dashboard'))
 const Login = lazy(()=> import('./Pages/Login')) 
+const Notifications = lazy(()=> import('./Pages/Notifications'))
 
 function AppContent() {
   const Jwt = Cookies.get('jwt_token')
@@ -58,9 +59,10 @@ function AppContent() {
               <Routes>
                 <Route path='/Hughesnetwork/Management/Dashboard' element={<Dashboard />} key={location.pathname} />
                 <Route path='/Hughesnetwork/Management/Invoices/Upload/Authuntication' element={<InvoiceUploadAuthuntication />} key={location.pathname}/> 
-                <Route path='/Hughesnetwork/Management/Invoices/Upload' element={<Invoices/>} key={location.pathname} />                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />
-                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />
-                <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Home' replace />} />
+                <Route path='/Hughesnetwork/Management/Invoices/Upload' element={<Invoices/>} key={location.pathname} />               
+                <Route path='/Hughesnetwork/Management/Invoices/Status' element={<Status />} key={location.pathname} />
+                <Route path='/Hughesnetwork/Management/Notifications' element={<Notifications />} key={location.pathname} />
+                <Route path='*' element={<Navigate to='/Hughesnetwork/Management/Dashboard' replace />} />
               </Routes>
             </section>
           </>

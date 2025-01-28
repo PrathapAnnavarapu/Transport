@@ -12,7 +12,7 @@ const menuItems = [
     { title: 'Home', path: '/Hughesnetwork/Management/Dashboard' },
     { title: 'Invoices', path: ['/Hughesnetwork/Management/Invoices', '/Hughesnetwork/Management/Invoices/Upload/Authuntication', '/Hughesnetwork/Management/Invoices/Status'] },
     { title: 'Billing', path: ['/Hughesnetwork/Management/Billing', '/Hughesnetwork/Management/Billing/Accounts', '/Hughesnetwork/Management/Billing/CostCenters'] },
-    { title: 'More', path: '/Hughesnetwork/Management/More' }
+    { title: 'More', path: ['/Hughesnetwork/Management/More', '/Hughesnetwork/Management/Notifications', '/Hughesnetwork/Management/FAQ'] }  // Add Notifications and FAQ paths here
 ];
 
 const Header = () => {
@@ -127,10 +127,9 @@ const Header = () => {
                     ))}
                 </ul>
             </div>
-
             <nav>
                 <div>
-                    <a href="#" data-tooltip="Notifications" className="notification">
+                    <a href="/Hughesnetwork/Management/Notifications" data-tooltip="Notifications" className="notification">
                         <div className="notification-count-none"></div>
                         <MdCircleNotifications />
                     </a>

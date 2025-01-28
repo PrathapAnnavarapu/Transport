@@ -543,6 +543,88 @@ body {
 }
 
 
+/* Notifications */
+/* **************************************************** */
+
+
+.notifications-container {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.notifications-container h5 {
+  width: 100%;
+  height: 8%;
+  color: rgb(29, 158, 87);
+}
+
+.notifications-container ul {
+  list-style-type: none;
+  width: 100%;
+  height: 92%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.notifications-container li {
+  width: 100%;
+  height: 10%;
+  border: solid 1px #CECECE;
+  padding: 10px;
+  font-size: 16px;
+  color: rgb(29, 158, 87);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow-y: scroll;
+}
+
+.notifications-container ul li span {
+  color: #0a0dd8;
+
+}
+
+.empty-notifications {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 92%;
+}
+
+.empty-notifications h4{
+  color: rgb(29, 158, 87);
+  font-size: 20px;
+}
+
+.no-notifications-icon {
+  width: 300px;
+  margin-bottom: 20px;
+
+}
+
+.notification-close-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.notification-invoicenumber {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.notification-invoicenumber:hover {
+  text-decoration: underline;
+  font-weight: 600;
+
+}
+
+
 
 
 /* TextInput */
@@ -1141,7 +1223,13 @@ table th {
   padding: 5px;
   border-radius: 8px;
   border: 1px solid;
-  height: 80%;
+  height: 90%;
+  border: 1px solid rgb(29, 158, 87);
+}
+
+.search-input:focus {
+  outline: none;
+  border: 2px solid rgb(29, 158, 87);
 }
 
 .status-buttons {
