@@ -443,13 +443,6 @@ body {
 
 }
 
-.hughes-logo {
-  width: 200px;
-  height: 60px;
-  margin: 4px;
-  margin-bottom: 60px;
-}
-
 .user-icon {
   vertical-align: middle;
   margin-right: 5px;
@@ -618,6 +611,16 @@ body {
   align-items: center;
 }
 
+.hughes-logo { 
+  margin: 0px;
+  font-size: 30px;
+  font-weight: 900;
+  font-family: 'Times New Roman', Times, serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;   
+}
+
 .header-main nav div {
   width: 100%;
   height: 100%;
@@ -634,7 +637,7 @@ body {
   display: flex;  
   justify-content:center; /* Align menu items to the left */
   align-items: center;        /* Vertically center items */
-  gap: 20px;                   /* Spacing between menu items */
+  gap: 200px;                   /* Spacing between menu items */
   list-style-type: none;       /* Remove default list styling */
 }
 
@@ -644,8 +647,22 @@ body {
   display: flex;  /* Use flexbox for the row layout */
   justify-content: flex-start; /* Align menu items to the left */
   align-items: center;        /* Vertically center items */
-  gap: 10px;                   /* Spacing between menu items */
-  list-style-type: none;       /* Remove default list styling */
+  gap: 15px;                   /* Spacing between menu items */
+  list-style-type: none;  
+  /* Remove default list styling */
+}
+
+.header-main > div >ul >li:hover{
+  font-size: 16px;
+  border: none;
+  background-color: #fff;
+  color: rgb(29, 158, 87);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 15px;  
+  list-style-type: none;
+  position: relative;
+  border-radius: 8px;
 }
 
 
@@ -662,20 +679,22 @@ body {
   list-style-type: none;
   position: relative;
   transition: background-color 0.2s ease;
+  border-radius: 8px;
+
 }
 
 /* Active tab styling */
-.activeTabClass {
-  background-color: transparent;
+.activeTabClass {  
   font-size: 16px;
   border: none;
-  color: #fff;
+  background-color: #fff;
+  color: rgb(29, 158, 87);
   font-weight: 600;
   cursor: pointer;
-  padding: 2px 15px;
-  border-bottom: solid 2px #fff;
+  padding: 5px 15px;  
   list-style-type: none;
   position: relative;
+  border-radius: 8px;
 }
 
 /* Notification styles */
@@ -805,7 +824,7 @@ body {
 .more-submenu {
   display: none; /* Hide submenus by default */
   position: absolute;
-  top: 30px; /* Position it right below the parent item */
+  top: 33px; /* Position it right below the parent item */
   left: 0;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -821,7 +840,7 @@ body {
   padding: 0;
   margin: 0;
   background-color: #fff;
-  color: rgb(29, 158, 87);
+  color: rgb(29, 158, 87);  
 }
 
 .reports-submenu ul li,
@@ -1003,7 +1022,7 @@ body {
 
 .invoice-numbers-list {
   width: 100%;
-  height: 87%;
+  height: 93%;
 }
 
 .bulk-selection-container {
@@ -1038,7 +1057,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-bottom: solid 1px #cecece;
+  border: solid 1px #cecece;
 }
 
 table {
@@ -1119,11 +1138,10 @@ table th {
 
 .search-input {
   display: flex;
-  align-self: flex-end;
   padding: 5px;
   border-radius: 8px;
   border: 1px solid;
-  height: 5%;
+  height: 80%;
 }
 
 .status-buttons {
@@ -1170,9 +1188,11 @@ table th {
 
 .status-container{
    position: absolute;
+   left: 0px;
    top: 10%;
    width: 100%;
    height: 90%;
+   padding: 5px 10px;
 }
 
 
@@ -1193,8 +1213,8 @@ table th {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 10%;
-  padding: 15px;
+  height: 7%;
+  padding: 8px;
 }
 
 .insight-1 {
@@ -1204,7 +1224,7 @@ table th {
   align-items: center;
   width: 18%;
   height: 100%;
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
   border: solid 1px rgba(174, 189, 255, 1);
 }
@@ -1256,7 +1276,7 @@ table th {
   align-items: center;
   width: 18%;
   height: 100%;
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
   border: solid 1px rgb(255 174 174);
 }
@@ -1268,7 +1288,7 @@ table th {
   align-items: center;
   width: 18%;
   height: 100%;
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
   border: solid 1px rgb(116 241 147);
 }
@@ -1280,7 +1300,7 @@ table th {
   align-items: center;
   width: 18%;
   height: 100%;
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
   border: solid 1px rgb(236 167 25);
 }
@@ -1292,10 +1312,18 @@ table th {
   align-items: center;
   width: 18%;
   height: 100%;
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
   border: solid 1px rgb(161 149 149);
 }
+
+.status-table-container{
+  width: 100%;
+  height: 93%;
+  overflow-y: hidden;  
+}
+
+
 
 
 

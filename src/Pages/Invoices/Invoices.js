@@ -80,7 +80,7 @@ const Mainmenu = () => {
   };
 
   const handleSelectAllChange = () => {
-    if (!selectAll) {
+    if (!selectAll && invoices.length !== 0) {
       setIsPopupOpen(true); // Open the popup to select the file format
     } else {
       setSelectedItems([]); // Uncheck all items if "Select All" is unchecked
@@ -173,19 +173,18 @@ const Mainmenu = () => {
       )}
       <div className='action-buttons-container'>
         <h3>Account Number : <span style={{ color: 'red', zIndex: 1 }}>{accountNumber}</span></h3>
-        <div>
-          <Button type='button' className='secondary-button' text='Close' onClick={() => { dispatch({ type: 'Clear_account_number' }); Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication') }} />
-          <Button type='button' className='secondary-button' text='Upload' onClick={uploadAutomation} />
-        </div>
-      </div>
-      <input
+        <input
         type="text"
         placeholder="Search invoice number..."
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
         className='search-input'
       />
-
+        <div>
+          <Button type='button' className='secondary-button' text='Close' onClick={() => { dispatch({ type: 'Clear_account_number' }); Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication') }} />
+          <Button type='button' className='secondary-button' text='Upload' onClick={uploadAutomation} />
+        </div>
+      </div>   
       <div className='invoice-numbers-list'>
         <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
           <h4>Please select a file format for all invoices</h4>
@@ -216,7 +215,6 @@ const Mainmenu = () => {
             <Button type='button' className='primary-button' text='Cancel' onClick={() => setIsPopupOpen(false)} />
           </div>
         </Popup>
-
         <div className='table-container'>
           <Table headers={headers} rowData={rowData} />
         </div>

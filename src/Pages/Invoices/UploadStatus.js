@@ -4,7 +4,7 @@ import React from 'react';
 import Table from '../../Components/Table'; // Adjust the import path as necessary
 
 const StatusTable = () => {
-  const headers = ['Account Number','Invoice ID', 'Invoice Number', 'Invoice Date', 'Status'];
+  const headers = [{key:'Account Number', label:'Account Number'},{key:'Invoice ID', label:'Invoice ID'}, {key:'Invoice Number', label:'Invoice Number'}, {key:'Invoice Date', label:'Invoice Number'}, {key:'Status', label:'Invoice Number'}];
   const rowData = [
     {
       'Account Number': '123456',
@@ -47,8 +47,10 @@ const StatusTable = () => {
           <h5>21</h5>
         </div>
       </div>
+      <div className='status-table-container'>
       <div className='table-container'>
          <Table headers={headers} rowData={rowData}/>;
+      </div>
       </div>
   </div>
 )};

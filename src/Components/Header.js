@@ -3,16 +3,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { MdCircleNotifications } from "react-icons/md";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import { MdOutlineAccountCircle } from "react-icons/md";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 import Button from './Button';
 import Popup from './Model';
-import {jwtDecode} from 'jwt-decode';
-
+import { jwtDecode } from 'jwt-decode';
 
 const menuItems = [
     { title: 'Home', path: '/Hughesnetwork/Management/Dashboard' },
-    { title: 'Invoices', path: '/Hughesnetwork/Management/Invoices' },
-    { title: 'Billing', path: '/Hughesnetwork/Management/Billing' },
+    { title: 'Invoices', path: ['/Hughesnetwork/Management/Invoices', '/Hughesnetwork/Management/Invoices/Upload/Authuntication', '/Hughesnetwork/Management/Invoices/Status'] },
+    { title: 'Billing', path: ['/Hughesnetwork/Management/Billing', '/Hughesnetwork/Management/Billing/Accounts', '/Hughesnetwork/Management/Billing/CostCenters'] },
     { title: 'More', path: '/Hughesnetwork/Management/More' }
 ];
 
@@ -21,10 +20,11 @@ const Header = () => {
     const location = useLocation();
     const [active, setActive] = useState(menuItems[0].title);
     const [isLogoutClicked, setIsLogoutClicked] = useState(false);
-    const [userDetails, setUserDetails] = useState({})
+    const [userDetails, setUserDetails] = useState({});
+    const [openSubmenu, setOpenSubmenu] = useState(null);
 
     const handleNavigation = (path) => {
-        const activeItem = menuItems.find(item => item.path === path);
+        const activeItem = menuItems.find(item => Array.isArray(item.path) ? item.path.includes(path) : item.path === path);
         if (activeItem) {
             setActive(activeItem.title);
         }
@@ -32,21 +32,20 @@ const Header = () => {
     };
 
     useEffect(() => {
-        const token = Cookies.get('jwt_token')// Replace with your actual JWT token
-        const decodedToken = jwtDecode(token);
-        setUserDetails(decodedToken.sub)         
-      }, []);
+        const token = Cookies.get('jwt_token'); // Replace with your actual JWT token
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            setUserDetails(decodedToken.sub);
+        }
+    }, []);
 
     useEffect(() => {
         const currentPath = location.pathname;
-        const activeItem = menuItems.find(item => currentPath.includes(item.path));
+        const activeItem = menuItems.find(item => Array.isArray(item.path) ? item.path.some(path => currentPath.includes(path)) : currentPath.includes(item.path));
         if (activeItem) {
             setActive(activeItem.title);
         }
     }, [location]);
-
-
-
 
     const openPopup = () => {
         setIsLogoutClicked(true);
@@ -56,45 +55,71 @@ const Header = () => {
         setIsLogoutClicked(false);
     };
 
+    const handleSubmenuToggle = (submenuName) => {
+        setOpenSubmenu(openSubmenu === submenuName ? null : submenuName);
+    };
 
     return (
         <header className="header-main">
             <div>
+                <h2 className='hughes-logo'>HUGHES</h2>
                 <ul>
                     {menuItems.map((item) => (
                         <li
                             key={item.title}
-                            onMouseEnter={() => setActive(item.title)}
-                            onMouseLeave={() => setActive('')}
                             className={item.title === active ? 'activeTabClass' : 'inactiveTabClass'}
+                            onClick={() => handleNavigation(Array.isArray(item.path) ? item.path[0] : item.path)}
                         >
                             <span>{item.icon}</span>
                             <h3>{item.title}</h3>
 
-                            {/* Invoices Submenu (show on hover) */}
-                            {item.title === 'Invoices' && active === 'Invoices' && (
-                                <div className="reports-submenu">
+                            {/* Invoices Submenu */}
+                            {item.title === 'Invoices' && (
+                                <div
+                                    className={`reports-submenu ${openSubmenu === 'invoices' ? 'show' : ''}`}
+                                    onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                >
                                     <ul>
-                                        <li>Load Invoices
-                                            {/* Nested submenu for "Load Invoices" */}
-                                            <div className="reports-sub-submenu">
+                                        <li>
+                                            Load Invoices
+                                            <div
+                                                className={`reports-sub-submenu ${openSubmenu === 'invoices-upload' ? 'show' : ''}`}
+                                                onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                            >
                                                 <ul>
                                                     <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Upload/Authuntication')}>Upload</li>
                                                     <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Status')}>Status</li>
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li>Summary</li>
-                                        <li>Department</li>
+                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Summary')}>Summary</li>
+                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Department')}>Department</li>
                                     </ul>
                                 </div>
                             )}
-                            {/* Billing Submenu (show on hover) */}
-                            {item.title === 'Billing' && active === 'Billing' && (
-                                <div className="more-submenu">
+
+                            {/* Billing Submenu */}
+                            {item.title === 'Billing' && (
+                                <div
+                                    className={`more-submenu ${openSubmenu === 'billing' ? 'show' : ''}`}
+                                    onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                >
                                     <ul>
                                         <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Accounts')}>Accounts</li>
                                         <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/CostCenters')}>Cost Centers</li>
+                                        {/* Nested submenu for Billing */}
+                                        <li>
+                                            Additional Billing Options
+                                            <div
+                                                className={`billing-sub-submenu ${openSubmenu === 'billing-options' ? 'show' : ''}`}
+                                                onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                            >
+                                                <ul>
+                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Additional/Option1')}>Option 1</li>
+                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Additional/Option2')}>Option 2</li>
+                                                </ul>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             )}
@@ -102,6 +127,7 @@ const Header = () => {
                     ))}
                 </ul>
             </div>
+
             <nav>
                 <div>
                     <a href="#" data-tooltip="Notifications" className="notification">
@@ -112,32 +138,28 @@ const Header = () => {
                         <AiFillQuestionCircle />
                     </a>
                     <button className='profile-icon' data-tooltip="Profile">
-                        <MdOutlineAccountCircle style={{fontSize:'28px'}}/>
+                        <MdOutlineAccountCircle style={{ fontSize: '28px' }} />
                         <div className='profile-hover-menu'>
                             <ul>
                                 <h3>{userDetails.username}</h3>
                                 <li>Manage Profile</li>
-                                <Button className='logout-button' text='Logout' onClick={() => openPopup()} />
-                                
+                                <Button className='logout-button' text='Logout' onClick={openPopup} />
                             </ul>
                         </div>
-                        {/* <div className='profile-name-and-role-details'>
-                                <h4>Prathap</h4>
-                                <h6>User</h6>
-                            </div> */}
                     </button>
-                </div>                
-            </nav>  
+                </div>
+            </nav>
+
             {isLogoutClicked && (
                 <Popup isOpen={true} onClose={closePopup}>
                     <h6 className='pop-up-text'>Do you want to logout?</h6>
                     <div className='status-buttons'>
-                        <Button type='button' className='primary-button' text='Yes' onClick={() => { navigate('/Hughesnetwork/Management/Login'); Cookies.remove('jwt_token') }} />
+                        <Button type='button' className='primary-button' text='Yes' onClick={() => { navigate('/Hughesnetwork/Management/Login'); Cookies.remove('jwt_token'); }} />
                         <Button type='button' className='primary-button' text='Close' onClick={closePopup} />
                     </div>
                 </Popup>
-            )}         
-        </header>        
+            )}
+        </header>
     );
 };
 
