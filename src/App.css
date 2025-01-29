@@ -334,15 +334,16 @@ body {
 
 .login-in-form {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  width: 40%;
-  height: 100%;
-  padding: 30px 8%;
-  background-color: #fff; 
-  box-shadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px';
-  gap:10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 40%;
+    height: 90%;
+    padding: 50px 8%;
+    background-color: #fff;
+    box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
+    gap: 10px;
+    border-radius: 12px;
 }
 
 .input-with-icon {
@@ -732,7 +733,7 @@ body {
   gap: 15px;                   /* Spacing between menu items */
   list-style-type: none;  
   /* Remove default list styling */
-}
+} 
 
 .header-main > div >ul >li:hover{
   font-size: 16px;
@@ -744,7 +745,7 @@ body {
   padding: 5px 15px;  
   list-style-type: none;
   position: relative;
-  border-radius: 8px;
+  border-radius: 8px;  
 }
 
 
@@ -784,6 +785,14 @@ body {
   color: #fff;
   font-size: 24px;
 }
+
+.right-arrow{
+  color: #aaa;
+  font-size: 16px;
+  align-self: flex-end;
+  
+}
+
 
 .notification {
   position: relative;
@@ -927,10 +936,14 @@ body {
 
 .reports-submenu ul li,
 .more-submenu ul li {
-  padding: 8px 10px; /* Padding inside submenu items */
+  padding: 8px 8px; /* Padding inside submenu items */
   cursor: pointer;
   transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
 
 /* Hover effect for submenu items */
 .reports-submenu ul li:hover,
@@ -1069,6 +1082,20 @@ body {
   font-size: 16px;
   padding-left: 30px;
   font-weight: 600;
+}
+
+.invoice-upload-in-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 40%;
+  height: 90%;
+  padding: 50px 8%;
+  background-color: #fff;
+  /* box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px; */
+  gap: 10px;
+
 }
 
 .mandatory {

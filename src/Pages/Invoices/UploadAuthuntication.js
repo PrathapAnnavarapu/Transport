@@ -45,7 +45,7 @@ const Authentication = () => {
                     render={(response) => { response.data && setAccountNoList(response.data) }}
                 />
             )}
-            <form className="login-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
+            <form className="invoice-upload-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
                 {credentialsError.msg && <h4 className="error-msg">{credentialsError.msg}</h4>}
                 <div className="input-field-container">
                     <label htmlFor="accountNumber">Account Number <span className="mandatory">*</span></label><br />

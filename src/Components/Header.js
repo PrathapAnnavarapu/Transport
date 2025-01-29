@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { MdCircleNotifications } from "react-icons/md";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import { MdOutlineAccountCircle } from "react-icons/md";
+import { FaAngleRight } from "react-icons/fa";
 import Cookies from 'js-cookie';
 import Button from './Button';
 import Popup from './Model';
@@ -81,7 +82,7 @@ const Header = () => {
                                 >
                                     <ul>
                                         <li>
-                                            Load Invoices
+                                            Load Invoices <FaAngleRight className='right-arrow'/>
                                             <div
                                                 className={`reports-sub-submenu ${openSubmenu === 'invoices-upload' ? 'show' : ''}`}
                                                 onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
@@ -101,27 +102,24 @@ const Header = () => {
                             {/* Billing Submenu */}
                             {item.title === 'Billing' && (
                                 <div
-                                    className={`more-submenu ${openSubmenu === 'billing' ? 'show' : ''}`}
-                                    onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
-                                >
-                                    <ul>
-                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Accounts')}>Accounts</li>
-                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/CostCenters')}>Cost Centers</li>
-                                        {/* Nested submenu for Billing */}
-                                        <li>
-                                            Additional Billing Options
-                                            <div
-                                                className={`billing-sub-submenu ${openSubmenu === 'billing-options' ? 'show' : ''}`}
-                                                onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
-                                            >
-                                                <ul>
-                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Additional/Option1')}>Option 1</li>
-                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Additional/Option2')}>Option 2</li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
+                                className={`reports-submenu ${openSubmenu === 'invoices' ? 'show' : ''}`}
+                                onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                            >
+                                <ul>
+                                    <li>
+                                        Additional <FaAngleRight className='right-arrow'/>
+                                        <div
+                                            className={`reports-sub-submenu ${openSubmenu === 'invoices-upload' ? 'show' : ''}`}
+                                            onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                        >
+                                            <ul>
+                                                <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Option 1')}>Option 1</li>
+                                                <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Option 2')}>Option2</li>
+                                            </ul>
+                                        </div>
+                                    </li>                                   
+                                </ul>
+                             </div>
                             )}
                         </li>
                     ))}
