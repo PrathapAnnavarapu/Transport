@@ -100,9 +100,10 @@ const Login = () => {
         <>
             <div className="Login-lg">                
                 <form className="login-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
+                    <h1>EBRM</h1>
                     {Object.keys(credentialsError).length !== 0 && <h4 className='error-msg'>{credentialsError.msg}</h4>}
                     {/* <h3> Expense Management Software</h3> */}
-                    <label htmlFor='username' className='label-text'>UserName<span className='mandatory'> *</span></label>
+                    <label htmlFor='username' className='label-text'>User Name<span className='mandatory'> *</span></label>
                     <div className='input-with-icon'>
                         <FiUser className='icon' />
                         <input

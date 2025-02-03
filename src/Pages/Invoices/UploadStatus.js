@@ -27,7 +27,7 @@ const StatusTable = () => {
   <div className='status-container'>
      <div className='insights-container'>
         <div className='insight-1'>
-          <h6>To Be Reviewed</h6>
+          <h6>Pending</h6>
           <h5>3</h5>
         </div>
         {/* <div className='insight-2'>
@@ -35,11 +35,11 @@ const StatusTable = () => {
           <h5>0</h5>
         </div> */}
         <div className='insight-4'>
-          <h6>Reviewed</h6>
+          <h6>Failed</h6>
           <h5>12</h5>
         </div>
         <div className='insight-3'>
-          <h6>Approved</h6>
+          <h6>Uploaded</h6>
           <h5>5</h5>
         </div>
         <div className='insight-5'>

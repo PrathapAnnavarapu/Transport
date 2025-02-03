@@ -146,7 +146,7 @@ const Mainmenu = () => {
 
   const uploadAutomation = async () => {
     setIsUploading(true);
-    if (selectedItems.length !== 0 && isUploading === true) { // Prevent multiple uploads
+    if (selectedItems.length !== 0 && isUploading === true) { 
       info('Your invoices are uploading, please wait...');
 
       setApiProps({
