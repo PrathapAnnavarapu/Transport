@@ -130,7 +130,7 @@ const Login = () => {
                         />
                     </div>
                     <h5 className='forgetPass' onClick={() => navigate('/Hughesnetwork/Management/login/ForgetPassword')}>Forgot Password?</h5>
-                    <Button type='submit' className='primary-button' text={isLoading ? 'Loading' : 'Log In'} />
+                    <Button type='submit' className='main-primary-button' text={isLoading ? 'Loading' : 'Log In'} />
                 </form>
             </div>
             <div className="Login-sm" style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/Images/Walletminded-NEW2-1.png)`, backgroundPosition: 'center', width: '100%', height: '100%' }}>
@@ -165,7 +165,7 @@ const Login = () => {
                         />
                     </div>
                     <h5 className='forgetPass' onClick={() => navigate('/Hughesnetwork/Management/login/ForgetPassword')}>Forgot Password?</h5>
-                    <Button type='submit' className='primary-buttton' text={isLoading ? 'LOADING...' : 'Log In'} />
+                    <Button type='submit' className='main-primary-button' text={isLoading ? 'LOADING...' : 'Log In'} />
                 </form>
             </div>
         </>

@@ -14,17 +14,35 @@ body {
 
 /* Buttons */
 
-.primary-button {
+.main-primary-button{
   width: 100%;
   height: 40px;
   border-radius: 12px;
   background-color: rgb(29, 158, 87);
-  color: #fff;
-  margin: 20px 0px;
-  padding: 10px 5px 10px 5px;
+  color: #fff;  
   cursor: pointer;
-  border: none;
-  font-size: 16px;
+  border: solid 1px rgb(29, 158, 87);
+  font-size: 14px;
+  font-family: 600;
+  position: relative;
+  /* Ensure relative positioning for absolute child */
+  display: inline-flex;
+  /* Use flex to align items */
+  align-items: center;
+  /* Center items vertically */
+  justify-content: center;
+  transition: background-color 0.3s ease;  
+}
+
+.primary-button {
+  width: 80px;
+  height: 30px;
+  border-radius: 12px;
+  background-color: rgb(29, 158, 87);
+  color: #fff;  
+  cursor: pointer;
+  border: solid 1px rgb(29, 158, 87);
+  font-size: 14px;
   font-family: 600;
   position: relative;
   /* Ensure relative positioning for absolute child */
@@ -37,13 +55,13 @@ body {
 }
 
 .secondary-button{
-  width: 100px;
+  width: 80px;
   height: 30px;
   border-radius: 12px;
-  background-color: rgb(29, 158, 87);
-  color: #fff;  
+  background-color: #fff;
+  color: rgb(29, 158, 87);  
   cursor: pointer;
-  border: none;
+  border: solid 1px rgb(29, 158, 87);
   font-size: 14px;
   font-family: 600;
   position: relative;
@@ -667,7 +685,7 @@ body {
 }
 
 .label-text {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;  
 }
 
@@ -681,7 +699,7 @@ body {
 
 .header-main {
   width: 100%;
-  height: 10%;
+  height: 7%;
   background-color: rgb(29, 158, 87);
   color: #fff;
   padding: 5px 20px;
@@ -743,13 +761,13 @@ body {
 } 
 
 .header-main > div >ul >li:hover{
-  font-size: 16px;
+  font-size: 14px;
   border: none;
   background-color: #fff;
   color: rgb(29, 158, 87);
   font-weight: 600;
   cursor: pointer;
-  padding: 5px 15px;  
+  padding: 4px 10px;  
   list-style-type: none;
   position: relative;
   border-radius: 8px;  
@@ -760,12 +778,12 @@ body {
 /* Inactive tab styling */
 .inactiveTabClass {
   background-color: transparent;
-  font-size: 16px;
+  font-size: 14px;
   border: none;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  padding: 2px 15px; /* Adjust padding for better spacing */
+  padding: 4px 10px; /* Adjust padding for better spacing */
   list-style-type: none;
   position: relative;
   transition: background-color 0.2s ease;
@@ -775,13 +793,13 @@ body {
 
 /* Active tab styling */
 .activeTabClass {  
-  font-size: 16px;
+  font-size: 14px;
   border: none;
   background-color: #fff;
   color: rgb(29, 158, 87);
   font-weight: 600;
   cursor: pointer;
-  padding: 5px 15px;  
+  padding: 4px 10px;
   list-style-type: none;
   position: relative;
   border-radius: 8px;
@@ -863,7 +881,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 9999;
   width: 130px; /* Adjust width of the submenu */
-  padding: 5px 0; /* Add padding for vertical spacing */
+  padding: 5px 0; /* Add padding for vertical spacing */  
  }
 
  .profile-icon:hover .profile-hover-menu ul{
@@ -876,7 +894,7 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease;
   border-top: solid 1px #CECECE;
-  font-size: 16px;
+  font-size: 14px;
  }
 
  .profile-hover-menu ul h3{
@@ -922,7 +940,7 @@ body {
 .more-submenu {
   display: none; /* Hide submenus by default */
   position: absolute;
-  top: 33px; /* Position it right below the parent item */
+  top: 28px; /* Position it right below the parent item */
   left: 0;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -1032,7 +1050,6 @@ body {
 }
 
 
-
 /* Authuntication */
 /* ------------------------------------------------------------- */
 
@@ -1054,7 +1071,7 @@ body {
   padding: 10px 8%;
   background-color: #fff;
   box-shadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px';
-  gap: 10px;
+  gap: 20px;
 
 }
 
@@ -1064,7 +1081,7 @@ body {
 }
 
 .authuntication-main form label {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;  
 }
 
@@ -1123,7 +1140,7 @@ body {
 
 .main-sidemenu {
   width: 100%;
-  height: 90%;
+  height: 93%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -1131,13 +1148,14 @@ body {
   gap: 10px;
   padding: 10px;
   position: absolute;
-  top: 10%;
+  top: 7%;
+  left: 0;
   z-index: 10; /* Set a higher z-index value */
 }
 
 .invoice-numbers-list {
   width: 100%;
-  height: 93%;
+  height: 95%;
 }
 
 .bulk-selection-container {
@@ -1192,8 +1210,8 @@ table td {
 table thead {
   position: sticky;
   top: 0;
-  background-color: #f2f2f2;
-  z-index: 1;
+  background-color: #f2f2f2;  
+  z-index: 1;  
 }
 
 .table-container tbody {
@@ -1201,10 +1219,11 @@ table thead {
   height: calc(100% - 40px); /* Adjust based on header height */
   overflow-y: auto;
   scrollbar-width: none;
+  font-size: 14px;
 }
 
 .table-container tbody tr:hover{
-  background-color: #f0efef;
+  background-color: #e0f1f3;
 }
 
 .table-container thead,
@@ -1212,10 +1231,6 @@ table thead {
   display: table;
   width: 100%;
   table-layout: fixed;
-}
-
-table th {
-  background-color: #f2f2f2;
 }
 
 .checkbox-class {
@@ -1281,8 +1296,12 @@ table th {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  height: 7%;
+  width: 100%;  
+  height: 5%;
+}
+
+.action-buttons-container h3{
+  font-size: 16px;
 }
 
 .action-buttons-container > div{
@@ -1312,12 +1331,12 @@ table th {
 
 
 .status-container{
-   position: absolute;
-   left: 0px;
-   top: 10%;
-   width: 100%;
-   height: 90%;
-   padding: 5px 10px;
+  position: absolute;
+  left: 0px;
+  top: 7%;
+  width: 100%;
+  height: 93%;
+  padding: 5px 10px;
 }
 
 

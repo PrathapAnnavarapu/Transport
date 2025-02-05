@@ -178,11 +178,10 @@ const Mainmenu = () => {
         placeholder="Search invoice number..."
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        className='search-input'
-      />
+        className='search-input'      />
         <div>
           <Button type='button' className='secondary-button' text='Close' onClick={() => { dispatch({ type: 'Clear_account_number' }); Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication') }} />
-          <Button type='button' className='secondary-button' text='Upload' onClick={uploadAutomation} />
+          <Button type='button' className='primary-button' text='Upload' onClick={uploadAutomation} />
         </div>
       </div>   
       <div className='invoice-numbers-list'>
