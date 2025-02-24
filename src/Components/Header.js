@@ -10,10 +10,10 @@ import Popup from './Model';
 import { jwtDecode } from 'jwt-decode';
 
 const menuItems = [
-    { title: 'Home', path: '/Hughesnetwork/Management/Dashboard' },
-    { title: 'Invoices', path: ['/Hughesnetwork/Management/Invoices', '/Hughesnetwork/Management/Invoices/Upload/Authuntication', '/Hughesnetwork/Management/Invoices/Status'] },
-    { title: 'Billing', path: ['/Hughesnetwork/Management/Billing', '/Hughesnetwork/Management/Billing/Accounts', '/Hughesnetwork/Management/Billing/CostCenters'] },
-    { title: 'More', path: ['/Hughesnetwork/Management/More', '/Hughesnetwork/Management/Notifications', '/Hughesnetwork/Management/FAQ'] }  // Add Notifications and FAQ paths here
+    { title: 'Home', path: '/Hughesnetwork-Management/Dashboard' },
+    { title: 'Invoices', path: ['/Hughesnetwork-Management/Invoices', '/Hughesnetwork-Management/Invoices/Status-Authuntication', '/Hughesnetwork-Management/Invoices/Upload-Status'] },
+    { title: 'Billing', path: ['/Hughesnetwork-Management/Billing', '/Hughesnetwork-Management/Billing/Accounts', '/Hughesnetwork-Management/Billing/CostCenters'] },
+    { title: 'More', path: ['/Hughesnetwork-Management/More', '/Hughesnetwork-Management/Notifications', '/Hughesnetwork-Management/FAQ'] }  // Add Notifications and FAQ paths here
 ];
 
 const Header = () => {
@@ -63,7 +63,7 @@ const Header = () => {
     return (
         <header className="header-main">
             <div>
-                <h2 className='hughes-logo'>HUGHES</h2>
+                <h2 className='hughes-logo'>EBRM</h2>
                 <ul>
                     {menuItems.map((item) => (
                         <li
@@ -88,13 +88,13 @@ const Header = () => {
                                                 onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
                                             >
                                                 <ul>
-                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Upload/Authuntication')}>Upload</li>
-                                                    <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Status')}>Status</li>
+                                                    <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Upload-Authuntication')}>Upload</li>
+                                                    <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Status-Authuntication')}>Status</li>
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Summary')}>Summary</li>
-                                        <li onClick={() => handleNavigation('/Hughesnetwork/Management/Invoices/Department')}>Department</li>
+                                        <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Summary')}>Summary</li>
+                                        <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Department')}>Department</li>
                                     </ul>
                                 </div>
                             )}
@@ -113,8 +113,8 @@ const Header = () => {
                                             onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
                                         >
                                             <ul>
-                                                <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Option 1')}>Option 1</li>
-                                                <li onClick={() => handleNavigation('/Hughesnetwork/Management/Billing/Option 2')}>Option2</li>
+                                                <li onClick={() => handleNavigation('/Hughesnetwork-Management/Billing/Option 1')}>Option 1</li>
+                                                <li onClick={() => handleNavigation('/Hughesnetwork-Management/Billing/Option 2')}>Option2</li>
                                             </ul>
                                         </div>
                                     </li>                                   
@@ -127,7 +127,7 @@ const Header = () => {
             </div>
             <nav>
                 <div>
-                    <a href="/Hughesnetwork/Management/Notifications" data-tooltip="Notifications" className="notification">
+                    <a href="/Hughesnetwork-Management/Notifications" data-tooltip="Notifications" className="notification">
                         <div className="notification-count-none"></div>
                         <MdCircleNotifications />
                     </a>
@@ -151,7 +151,7 @@ const Header = () => {
                 <Popup isOpen={true} onClose={closePopup}>
                     <h6 className='pop-up-text'>Do you want to logout?</h6>
                     <div className='status-buttons'>
-                        <Button type='button' className='primary-button' text='Yes' onClick={() => { navigate('/Hughesnetwork/Management/Login'); Cookies.remove('jwt_token'); }} />
+                        <Button type='button' className='primary-button' text='Yes' onClick={() => { navigate('/Hughesnetwork-Management/Login'); Cookies.remove('jwt_token'); }} />
                         <Button type='button' className='primary-button' text='Close' onClick={closePopup} />
                     </div>
                 </Popup>

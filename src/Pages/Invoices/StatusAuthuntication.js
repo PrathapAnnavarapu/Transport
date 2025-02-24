@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -5,10 +7,23 @@ import Button from '../../Components/Button';
 import ApiComponent from '../../Components/API';
 import Dropdown from '../../Components/Dropdown';
 
-const Authentication = () => {
+const StatusAuthentication = () => {
     const Navigate = useNavigate();
     const dispatch = useDispatch();
-    const [accountNoList, setAccountNoList] = useState([]);
+    const [accountNoList, setAccountNoList] = useState([
+        {
+            "ACCOUNT_NO": "SPL"
+        },
+        {
+            "ACCOUNT_NO": "ROW"
+        },
+        {
+            "ACCOUNT_NO": "CKN"
+        },
+        {
+            "ACCOUNT_NO": "GLP"
+        },        
+    ]);
     const [accountNumber, setAccountNumber] = useState(null);
     const [credentialsError, setCredentialsError] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +39,7 @@ const Authentication = () => {
     const getInvoices = (msg) => {
         if (Object.keys(msg).length === 0) {
             dispatch({ type: 'Add_account_number', payload: accountNumber });
-            Navigate('/Hughesnetwork-Management/Invoices/Upload');
+            Navigate('/Hughesnetwork-Management/Invoices/Upload-Status');
         }
     };
 
@@ -55,7 +70,7 @@ const Authentication = () => {
                     htmlFor="accountNumber"
                     id="accountNumber"
                     labelClassName="your-label-class"
-                    label="Upload Account Number"
+                    label="Status Account Number"
                     onChange={(e) => setAccountNumber(e.target.value)}
                     placeholder="Account Number"
                     name="accountNumber"
@@ -74,4 +89,4 @@ const Authentication = () => {
     );
 };
 
-export default Authentication;
+export default StatusAuthentication;

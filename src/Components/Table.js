@@ -5,11 +5,11 @@ const Table = ({ headers, rowData }) => {
 
   const getStatusClass = (status) => {
     switch (status) {
-      case 'Paid':
+      case 'UPLOADED':
         return 'status-paid';
-      case 'Pending':
+      case 'PENDING':
         return 'status-in-progress';
-      case 'Failure':
+      case 'FAILED':
         return 'status-failure';
       default:
         return '';
