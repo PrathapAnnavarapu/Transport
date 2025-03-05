@@ -11,7 +11,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const menuItems = [
     { title: 'Home', path: '/Hughesnetwork-Management/Dashboard' },
-    { title: 'Invoices', path: ['/Hughesnetwork-Management/Invoices', '/Hughesnetwork-Management/Invoices/Status-Authuntication', '/Hughesnetwork-Management/Invoices/Upload-Status'] },
+    { title: 'Invoices', path: ['/Hughesnetwork-Management/Invoices', '/Hughesnetwork-Management/Invoices/Upload-Status'] },
     { title: 'Billing', path: ['/Hughesnetwork-Management/Billing', '/Hughesnetwork-Management/Billing/Accounts', '/Hughesnetwork-Management/Billing/CostCenters'] },
     { title: 'More', path: ['/Hughesnetwork-Management/More', '/Hughesnetwork-Management/Notifications', '/Hughesnetwork-Management/FAQ'] }  // Add Notifications and FAQ paths here
 ];
@@ -89,7 +89,7 @@ const Header = () => {
                                             >
                                                 <ul>
                                                     <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Upload-Authuntication')}>Upload</li>
-                                                    <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Status-Authuntication')}>Status</li>
+                                                    <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Upload-Status')}>Status</li>
                                                 </ul>
                                             </div>
                                         </li>
@@ -146,7 +146,6 @@ const Header = () => {
                     </button>
                 </div>
             </nav>
-
             {isLogoutClicked && (
                 <Popup isOpen={true} onClose={closePopup}>
                     <h6 className='pop-up-text'>Do you want to logout?</h6>

@@ -13,7 +13,6 @@ import './App.css';
 
 
 const InvoiceUploadAuthuntication = lazy(() => import('./Pages/Invoices/UploadAuthuntication'));
-const InvoiceStatusUploadAuthuntication = lazy(() => import('./Pages/Invoices/StatusAuthuntication'));
 const Invoices = lazy(() => import('./Pages/Invoices/Invoices'));
 const Header = lazy(() => import('./Components/Header'));
 const Status = lazy(() => import('./Pages/Invoices/UploadStatus'));
@@ -60,7 +59,6 @@ function AppContent() {
                 <Route path='/Hughesnetwork-Management/Dashboard' element={<Dashboard />} key={location.pathname} />
                 <Route path='/Hughesnetwork-Management/Invoices/Upload-Authuntication' element={<InvoiceUploadAuthuntication />} key={location.pathname} />
                 <Route path='/Hughesnetwork-Management/Invoices/Upload' element={<Invoices />} key={location.pathname} />
-                <Route path='/Hughesnetwork-Management/Invoices/Status-Authuntication' element={<InvoiceStatusUploadAuthuntication />} key={location.pathname} />
                 <Route path='/Hughesnetwork-Management/Invoices/Upload-Status' element={<Status />} key={location.pathname} />
                 <Route path='/Hughesnetwork-Management/Notifications' element={<Notifications />} key={location.pathname} />
                 <Route path='*' element={<Navigate to='/Hughesnetwork-Management/Dashboard' replace />} />

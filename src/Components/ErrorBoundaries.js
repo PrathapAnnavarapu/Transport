@@ -23,7 +23,7 @@ const ErrorBoundary = ({ children }) => {
   }, []);
 
   if (hasError) {
-    return <h1>Something went wrong.</h1>;
+    return <h1 style={{display:'flex', justifyContent:'center',alignItems:'center'}}>Something went wrong.</h1>;
   }
 
   return children;

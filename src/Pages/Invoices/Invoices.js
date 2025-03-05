@@ -55,7 +55,7 @@ const Mainmenu = () => {
 
   const handleChangeOption = (e, INVOICE_NO) => {
     const newFormat = e.target.value;
-    const item = invoices.find(item => item.INVOICE_NO === INVOICE_NO);    
+    const item = invoices.find(item => item.INVOICE_NO === INVOICE_NO);
     const updatedItem = { ...item, FILE_FORMAT: newFormat };
     const updatedItems = selectedItems.map(item =>
       item.INVOICE_NO === INVOICE_NO ? updatedItem : item
@@ -146,7 +146,7 @@ const Mainmenu = () => {
 
   const uploadAutomation = async () => {
     setIsUploading(true);
-    if (selectedItems.length !== 0 && isUploading === true) { 
+    if (selectedItems.length !== 0 && isUploading === true) {
       info('Your invoices are uploading, please wait...');
 
       setApiProps({
@@ -174,18 +174,22 @@ const Mainmenu = () => {
       <div className='action-buttons-container'>
         <h3>Account Number : <span style={{ color: 'red', zIndex: 1 }}>{accountNumber}</span></h3>
         <input
-        type="text"
-        placeholder="Search invoice number..."
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        className='search-input'      />
+          type="text"
+          placeholder="Search invoice number..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className='search-input' />
         <div>
-          <Button type='button' className='secondary-button' text='Close' onClick={() => { dispatch({ type: 'Clear_account_number' }); Navigate('/Hughesnetwork/Management/Invoices/Upload/Authuntication') }} />
+          <Button type='button' className='secondary-button' text='Close' onClick={() => { dispatch({ type: 'Clear_account_number' }); Navigate('/Hughesnetwork-Management/Invoices/Upload-Authuntication') }} />
           <Button type='button' className='primary-button' text='Upload' onClick={uploadAutomation} />
         </div>
-      </div>   
-      <div className='invoice-numbers-list'>
-        <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
+      </div>
+      <div className='invoice-numbers-list'>        
+        <div className='table-container'>
+          <Table headers={headers} rowData={rowData} />
+        </div>
+      </div>
+      <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
           <h4>Please select a file format for all invoices</h4>
           <div className='bulk-selection-container'>
             <div>
@@ -214,10 +218,6 @@ const Mainmenu = () => {
             <Button type='button' className='primary-button' text='Cancel' onClick={() => setIsPopupOpen(false)} />
           </div>
         </Popup>
-        <div className='table-container'>
-          <Table headers={headers} rowData={rowData} />
-        </div>
-      </div>
     </form>
   );
 };
