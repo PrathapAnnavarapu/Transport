@@ -6,17 +6,17 @@ import Cookies from 'js-cookie'
 import { FiUser } from "react-icons/fi";
 import { CiMobile1 } from "react-icons/ci";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import ToastComponent from '../Components/Toast'
 import Button from '../Components/Button'
 
-const Login = () => {
+const Signup = () => {
     const { info, error } = ToastComponent()
-    const navigate = useNavigate()
-
+    const navigate = useNavigate()    
     const [credentials, setCredentials] = useState({
         phone: '',
-        password: '',
+        password: '',   
+        repassword:''     
     })
     const [credentialsError, setCredentialsError] = useState({})
     const [isLoading, setIsLoading] = useState(false)
@@ -34,7 +34,7 @@ const Login = () => {
     const sendCredentialsToDB = async (msg) => {
         if (Object.keys(msg).length === 0) {
             setIsLoading(true);
-            const url = 'http://127.0.0.1:5001/api/employee/login';
+            const url = 'http://127.0.0.1:5001/api/signup/employee';
 
             const options = {
                 method: 'POST',
@@ -47,26 +47,19 @@ const Login = () => {
             };
 
             try {
-                const response = await fetch(url, options);
+                const response = await fetch(url, options);                
                 if (response.ok) { // response.ok is true for status codes in the range 200-299
-                    const data = await response.json();
-                    Cookies.set('jwt_token', data.access_token);
+                    const data = await response.json();                    
                     setIsLoading(false);
-                    navigate('/Employee/Dashboard');
-                    info('You are Logged in Successfully');
+                    navigate('/');
+                    info("Password set successfully");
                 } else if (response.status === 400 || response.status === 401) {
                     const errorData = await response.json(); // Parse response to get the error message
                     setIsLoading(false);
                     const errorMessage = errorData.message || 'Please check the credentials';
                     error(errorMessage); // Assuming error function displays messages
                 }
-                else if (response.status === 403) {
-                    const errorData = await response.json();
-                    const errorMessage = errorData.message
-                    error(errorMessage);
-                    navigate('/Hughesnetwork-Management/login/ChangePassword')
-
-                }
+               
             } catch (err) {
                 setIsLoading(false); // Ensure loading state is turned off in case of error
                 error(err.message || 'An unexpected error occurred'); // Ensure error function handles errors properly
@@ -82,7 +75,14 @@ const Login = () => {
         }
         if (!details.password) {
             errorObject.msg = 'Password should not be empty'
-        } if (!details.phone && !details.password) {
+        } 
+        if (!details.repassword) {
+            errorObject.msg = 'Confirm Password should not be empty'            
+        }
+        if (details.repassword !== details.password) {
+            errorObject.msg = 'Confirm Password should be same to password'            
+        }        
+        if (!details.phone && !details.password) {
             errorObject.msg = 'Credentials should not be empty'
         }
         return errorObject
@@ -96,20 +96,19 @@ const Login = () => {
         setCredentialsError(errorMessage)
     }
 
+
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
-
-
 
 
     return (
         <>
             <div className="Login-lg">
                 <div className='login-form-container'>
-                    <form className="login-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
+                    <form className="signup-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
                         {/* <img src={process.env.PUBLIC_URL + '/Images/Hughes_Network_Systems_Logo-2048x523.png'} alt='hughes' className='hughes-logo' /> */}
-                        <h1>RIDE</h1>
+                        {/* <h1>RIDE</h1> */}
                         {Object.keys(credentialsError).length !== 0 && <h4 className='error-msg'>{credentialsError.msg}</h4>}
                         {/* <h3> Expense Management Software</h3> */}
                         <label htmlFor='username' className='label-text'>Mobile No<span className='mandatory'> *</span></label>
@@ -138,22 +137,35 @@ const Login = () => {
                                 onChange={(e) => onHandleChangeCredentials(e)}
                             />
                             <span
-                                className="eye-icon"
-                                onClick={togglePasswordVisibility} // Toggle visibility on click
-                                style={{ cursor: 'pointer' }}
-                            >
-                                {isPasswordVisible ? <FaEyeSlash /> : <FaEye />} {/* Toggle between eye and eye-slash */}
-                            </span>
+                            className="eye-icon"
+                            onClick={togglePasswordVisibility} // Toggle visibility on click
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {isPasswordVisible ? <FaEyeSlash /> : <FaEye />} {/* Toggle between eye and eye-slash */}
+                        </span>
                         </div>
-                        <h5 className='forgetPass' onClick={() => navigate('/ForgetPassword')}>Forgot Password?</h5>
-                        <Button type='submit' className='main-primary-button' text={isLoading ? 'Loading' : 'Log In'} />
-                        <h5 className='forgetPass' onClick={() => navigate('/employee/signup')}>Set password?</h5>
+                        <label htmlFor='re-password' className='label-text'>Confirm Password<span className='mandatory'> *</span></label>
+
+                        <div className='input-with-icon'>
+                            <RiLockPasswordLine className='icon' />
+                            <input
+                                id='re-password'
+                                type='password'
+                                className='login-input-text-field'
+                                placeholder='Password'
+                                name='repassword'
+                                value={credentials.repassword}
+                                onChange={(e) => onHandleChangeCredentials(e)}
+                            />
+                        </div>
+                        <button type='submit' className='main-primary-button' style={{marginTop:'40px'}}>{isLoading ? 'Loading' : 'Sign Up'}</button>
                     </form>
                 </div>
             </div>
             <div className="Login-sm" style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/Images/Walletminded-NEW2-1.png)`, backgroundPosition: 'center', width: '100%', height: '100%' }}>
                 <form className="login-in-form-sm" onSubmit={checkCredentialsBeforeToSendToDB} >
                     {Object.keys(credentialsError).length !== 0 && <p className='error-msg'>{credentialsError.msg}</p>}
+                    <img src={process.env.PUBLIC_URL + '/Images/hughes_network_systems_0_66088.jpg'} alt='hughes' className='hughes-logo' />
                     <h3> Enter Your Username and Password to Continue</h3>
                     <label htmlFor='username-sm' className='label-text'>UserName<span className='mandatory'> *</span></label>
                     <div className='input-with-icon'>
@@ -182,12 +194,12 @@ const Login = () => {
                         />
                     </div>
                     <h5 className='forgetPass' onClick={() => navigate('/ForgetPassword')}>Forgot Password?</h5>
-                    <Button type='submit' className='main-primary-button' text={isLoading ? 'LOADING...' : 'Log In'} />
-                    <h5 className='forgetPass' onClick={() => navigate('/employee/signup')}>Set password?</h5>
+                    <Button type='submit' className='main-primary-button' text={isLoading ? 'LOADING...' : 'Sign Up'} />
+                    <h5 className='forgetPass' onClick={() => navigate('/employee/signup')}>Signup?</h5>
                 </form>
             </div>
         </>
     )
 }
 
-export default Login
+export default Signup

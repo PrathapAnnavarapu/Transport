@@ -1,21 +1,56 @@
+import React from 'react';
 
+const Dropdown = ({
+  options = [],
+  className,
+  htmlFor,
+  id,
+  labelClassName,
+  label,
+  onChange,
+  placeholder,
+  name,
+  dropDownList,
+  value,
+  mandatory,
+  style
+}) => {
+  return (
+    <div className="input-field-container">
+      <label htmlFor={htmlFor} className={labelClassName}>
+        {label} <span className="mandatory">{mandatory ? '*' : ''}</span>
+      </label>
+      <input
+        list={dropDownList}
+        id={id}
+        name={name}
+        className={className}
+        onChange={onChange}
+        placeholder={placeholder}
+        value={value}
+        style={style}
+        onFocus={(e) => {
+          // Ensures the dropdown opens even when value is preselected
+          const currentValue = e.target.value;
+          e.target.value = '';
+          setTimeout(() => {
+            e.target.value = currentValue;
+          }, 0);
+        }}
+      />
+      <datalist id={dropDownList}>
+        {options && options.length > 0 ? (
+          options.map((eachValue, index) => (
+            <option key={index} value={eachValue}>
+              {eachValue}
+            </option>
+          ))
+        ) : (
+          <option value="">No options available</option>
+        )}
+      </datalist>
+    </div>
+  );
+};
 
-import React from 'react'
-
-const Dropdown = (props) => {
-    const { options, className, htmlFor, id, labelClassName, label, onChange, placeholder, name, dropDownList, value, mandatory} = props
-    
-    return (
-        <div className='input-field-container'>
-            <label htmlFor={htmlFor} className={labelClassName}>{label} <span className='mandatory'>{mandatory}</span></label>
-            <input list ={dropDownList} id={id} name={name} className={className} onChange={onChange} placeholder={placeholder} value={value}/>
-            <datalist id={dropDownList}>
-                {options.map((eachValue)=>{
-                    return  <option key={eachValue} value={eachValue}>{eachValue}</option>
-               })}
-            </datalist>
-        </div>
-    )
-}
-
-export default React.memo(Dropdown)
+export default React.memo(Dropdown);

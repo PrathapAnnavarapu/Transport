@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MdCircleNotifications } from "react-icons/md";
-import { AiFillQuestionCircle } from "react-icons/ai";
-import { MdOutlineAccountCircle } from "react-icons/md";
-import { FaAngleRight } from "react-icons/fa";
+import { CiLogout } from "react-icons/ci";
 import Cookies from 'js-cookie';
 import Button from './Button';
 import Popup from './Model';
 import { jwtDecode } from 'jwt-decode';
 
 const menuItems = [
-    { title: 'Home', path: '/Hughesnetwork-Management/Dashboard' },
-    { title: 'Invoices', path: ['/Hughesnetwork-Management/Invoices', '/Hughesnetwork-Management/Invoices/Upload-Status'] },
-    { title: 'Billing', path: ['/Hughesnetwork-Management/Billing', '/Hughesnetwork-Management/Billing/Accounts', '/Hughesnetwork-Management/Billing/CostCenters'] },
-    { title: 'More', path: ['/Hughesnetwork-Management/More', '/Hughesnetwork-Management/Notifications', '/Hughesnetwork-Management/FAQ'] }  // Add Notifications and FAQ paths here
+    { title: 'Home', path: '/Employee/Dashboard', img: '/Images/8726049_home_alt_icon.png' },
+    { title: 'Self', path:'/Employee/Schedules', img: '/Images/5094666_calendar_date_schedule_time_icon.png' },
+    { title: 'SPOC', path:'/Employee/SPOC-Schedules', img: '/Images/5094666_calendar_date_schedule_time_icon.png' },
+    { title: 'SPOC ', path:'/Admin/SPOC-Schedules', img: '/Images/6791598_calender_daedline_date_event_schedule_icon.png' },
+    { title: 'Routing', path:['/Employeegrouped/pickup/SPOC-Schedules','/Employeegrouped/drop/SPOC-Schedules'], img: '/Images/3915763_location_maps_navigation_pin_route_icon.png' },   
+    { title: 'Reports', path: ['/Employee/Details','/Vehicle/Details', '/Vehicle/Billing', '/Employee/Roaster/Report'], img: '/Images/8960618_reports_checkup_clipboard_hospital_doctor_icon.png', },    
+    { title: 'More', path:['/Employee/Manage/Schedules','/Vechile/Billing-Policy'], img: '/Images/7324042_ui_interface_more_options_menu_icon.png', }
 ];
+
 
 const Header = () => {
     const navigate = useNavigate();
@@ -22,7 +23,8 @@ const Header = () => {
     const [active, setActive] = useState(menuItems[0].title);
     const [isLogoutClicked, setIsLogoutClicked] = useState(false);
     const [userDetails, setUserDetails] = useState({});
-    const [openSubmenu, setOpenSubmenu] = useState(null);
+    const [openSubmenu, setOpenSubmenu] = useState(null);  
+
 
     const handleNavigation = (path) => {
         const activeItem = menuItems.find(item => Array.isArray(item.path) ? item.path.includes(path) : item.path === path);
@@ -33,20 +35,37 @@ const Header = () => {
     };
 
     useEffect(() => {
-        const token = Cookies.get('jwt_token'); // Replace with your actual JWT token
+        const token = Cookies.get('jwt_token');
         if (token) {
             const decodedToken = jwtDecode(token);
             setUserDetails(decodedToken.sub);
         }
     }, []);
 
+    
+    // Filter menu items based on user role
+    const filteredMenuItems = menuItems.filter(item => {
+        if (userDetails.role === 'Admin') {
+            return item.title !== 'SPOC';  // Admin sees all menu items
+        }
+        if (userDetails.role === 'superuser') {
+            // Superuser sees all menu items except the ones meant for the user
+            return item.title === 'Home' || item.title === 'SPOC Book&Sch' ||  item.title === 'Book&Sch'; 
+        }
+        if (userDetails.role === 'user') {
+            // User only sees specific items
+            return item.title === 'Home' || item.title === 'Self';  
+        }        
+        return false;
+    });
+
     useEffect(() => {
         const currentPath = location.pathname;
-        const activeItem = menuItems.find(item => Array.isArray(item.path) ? item.path.some(path => currentPath.includes(path)) : currentPath.includes(item.path));
+        const activeItem = filteredMenuItems.find(item => Array.isArray(item.path) ? item.path.some(path => currentPath.includes(path)) : currentPath.includes(item.path));
         if (activeItem) {
             setActive(activeItem.title);
         }
-    }, [location]);
+    }, [location, filteredMenuItems]);
 
     const openPopup = () => {
         setIsLogoutClicked(true);
@@ -63,84 +82,97 @@ const Header = () => {
     return (
         <header className="header-main">
             <div>
-                <h2 className='hughes-logo'>EBRM</h2>
+                <h2 className='hughes-logo' onClick={() => navigate('/Hughesnetwork-Management/Dashboard')}>RIDE</h2>
                 <ul>
-                    {menuItems.map((item) => (
+                    {filteredMenuItems.map((item) => (
                         <li
                             key={item.title}
                             className={item.title === active ? 'activeTabClass' : 'inactiveTabClass'}
                             onClick={() => handleNavigation(Array.isArray(item.path) ? item.path[0] : item.path)}
                         >
-                            <span>{item.icon}</span>
-                            <h3>{item.title}</h3>
+                            <div className="menu-item-content">
+                                {item.img && <img src={item.img} alt={item.title} className="menu-item-icon" />}
+                                <span>{item.icon}</span>
+                                <h3>{item.title}</h3>
+                            </div>
 
                             {/* Invoices Submenu */}
-                            {item.title === 'Invoices' && (
+                            {item.title === 'Book&Sch' && (
+                                <div
+                                    className={`reports-submenu ${openSubmenu === 'invoices' ? 'show' : ''}`}
+                                    onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                >                                    
+                                </div>
+                            )}
+
+                            {/* Billing Submenu */}
+                            {item.title === 'Routing' && (
                                 <div
                                     className={`reports-submenu ${openSubmenu === 'invoices' ? 'show' : ''}`}
                                     onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
                                 >
                                     <ul>
-                                        <li>
-                                            Load Invoices <FaAngleRight className='right-arrow'/>
-                                            <div
-                                                className={`reports-sub-submenu ${openSubmenu === 'invoices-upload' ? 'show' : ''}`}
-                                                onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
-                                            >
-                                                <ul>
-                                                    <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Upload-Authuntication')}>Upload</li>
-                                                    <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Upload-Status')}>Status</li>
-                                                </ul>
-                                            </div>
+                                        <li onClick={() => handleNavigation('/Employeegrouped/pickup/SPOC-Schedules')}>
+                                           Pickup Routing
                                         </li>
-                                        <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Summary')}>Summary</li>
-                                        <li onClick={() => handleNavigation('/Hughesnetwork-Management/Invoices/Department')}>Department</li>
+                                        <li onClick={() => handleNavigation('/Employeegrouped/drop/SPOC-Schedules')}>
+                                           Drop Routing
+                                        </li>
                                     </ul>
                                 </div>
                             )}
-
-                            {/* Billing Submenu */}
-                            {item.title === 'Billing' && (
+                            {item.title === 'Reports' && (
                                 <div
-                                className={`reports-submenu ${openSubmenu === 'invoices' ? 'show' : ''}`}
-                                onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
-                            >
-                                <ul>
-                                    <li>
-                                        Additional <FaAngleRight className='right-arrow'/>
-                                        <div
-                                            className={`reports-sub-submenu ${openSubmenu === 'invoices-upload' ? 'show' : ''}`}
-                                            onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
-                                        >
-                                            <ul>
-                                                <li onClick={() => handleNavigation('/Hughesnetwork-Management/Billing/Option 1')}>Option 1</li>
-                                                <li onClick={() => handleNavigation('/Hughesnetwork-Management/Billing/Option 2')}>Option2</li>
-                                            </ul>
-                                        </div>
-                                    </li>                                   
-                                </ul>
-                             </div>
+                                    className={`reports-submenu ${openSubmenu === 'invoices' ? 'show' : ''}`}
+                                    onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                >
+                                    <ul>
+                                        <li onClick={() => handleNavigation('/Employee/Details')}>
+                                           Employee Details
+                                        </li>
+                                        <li onClick={() => handleNavigation('/Vehicle/Details')}>
+                                           Vechile Details
+                                        </li>
+                                        <li onClick={() => handleNavigation('/Vehicle/Billing')}>
+                                           Billing Details
+                                        </li>
+                                         <li onClick={() => handleNavigation('/Employee/Roaster/Report')}>
+                                           Employee Roaster Audit Report
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                             {item.title === 'More' && (
+                                <div
+                                    className={`reports-submenu ${openSubmenu === 'invoices' ? 'show' : ''}`}
+                                    onClick={(e) => e.stopPropagation()}  // Prevent event bubbling
+                                >
+                                    <ul>
+                                        <li onClick={() => handleNavigation('/Employee/Manage/Schedules')}>
+                                           Manage Schedule Times
+                                        </li>
+                                        <li onClick={() => handleNavigation('/Vechile/Billing-Policy')}>
+                                           Vehicle Billing Policy
+                                        </li>
+                                    </ul>
+                                </div>
                             )}
                         </li>
                     ))}
                 </ul>
             </div>
             <nav>
-                <div>
-                    <a href="/Hughesnetwork-Management/Notifications" data-tooltip="Notifications" className="notification">
-                        <div className="notification-count-none"></div>
-                        <MdCircleNotifications />
-                    </a>
-                    <a href="#" data-tooltip="FAQ" className="notification">
-                        <AiFillQuestionCircle />
-                    </a>
+                <div>                   
                     <button className='profile-icon' data-tooltip="Profile">
-                        <MdOutlineAccountCircle style={{ fontSize: '28px' }} />
+                        <img src='/Images/4696674_account_avatar_male_people_person_icon.png' alt='avatar' style={{ width: '28px', height:'28px' }} />
                         <div className='profile-hover-menu'>
                             <ul>
-                                <h3>{userDetails.username}</h3>
+                                <h4>{userDetails.employee_name}</h4>
+                                <h5>{userDetails.role}</h5>
+                                <h6>{userDetails.employee_email}</h6>
+
                                 <li>Manage Profile</li>
-                                <Button className='logout-button' text='Logout' onClick={openPopup} />
+                                <button className='logout-button' onClick={openPopup}><CiLogout /> Logout</button>
                             </ul>
                         </div>
                     </button>
@@ -150,8 +182,8 @@ const Header = () => {
                 <Popup isOpen={true} onClose={closePopup}>
                     <h6 className='pop-up-text'>Do you want to logout?</h6>
                     <div className='status-buttons'>
-                        <Button type='button' className='primary-button' text='Yes' onClick={() => { navigate('/Hughesnetwork-Management/Login'); Cookies.remove('jwt_token'); }} />
-                        <Button type='button' className='primary-button' text='Close' onClick={closePopup} />
+                        <Button type='button' className='tertioary-button-main' text='Yes' onClick={() => { navigate('/'); Cookies.remove('jwt_token'); }} />
+                        <Button type='button' className='tertioary-button' text='Close' onClick={closePopup} />
                     </div>
                 </Popup>
             )}

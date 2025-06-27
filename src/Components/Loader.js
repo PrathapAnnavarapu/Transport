@@ -9,7 +9,7 @@ const Loader = () => {
   return (
     <div className="loader-container">
       <ClipLoader
-        color='rgb(29, 158, 87)'
+        color='#2f2f2f'
         size={30}
         aria-label="Loading Spinner"
         data-testid="loader"

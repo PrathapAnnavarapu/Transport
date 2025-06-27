@@ -12,14 +12,25 @@ import Loader from './Components/Loader';
 import './App.css';
 
 
-const InvoiceUploadAuthuntication = lazy(() => import('./Pages/Invoices/UploadAuthuntication'));
-const Invoices = lazy(() => import('./Pages/Invoices/Invoices'));
+const SPOCSchedules = lazy(() => import('./Pages/Schedules/SPOC-Schedules'));
+const SPOCScheduleManager = lazy(() => import('./Pages/Schedules/ScheduleManager'));
+const AdminSPOCSchedules = lazy(() => import('./Pages/Schedules/SPOC-Schedules-admin'))
+const BillingPolicy = lazy(() => import('./Pages/Billing/BillingPolicyManager'))
+const EmployeesList = lazy(() => import('./Pages/Employees/EmployeesList'))
+const EmployeeDetails = lazy(() => import('./Pages/Employees/EmployeeDetails'))
+const VehicleDetails = lazy(() => import('./Pages/Vehicle/Vehicles'))
+const SelfEmployeeSchedules = lazy(() => import('./Pages/Schedules/SelfEmployeeSchedules'))
+const PickupGroupedSchedules = lazy(() => import('./Pages/Schedules/PickupGroupingSchedules'))
+const DropGroupedSchedules = lazy(() => import('./Pages/Schedules/DropGroupingSchedules'))
+const RoutingInitialize = lazy(() => import('./Pages/Routing/RouteInitializing'))
+const BillingReport = lazy(() => import('./Pages/Billing/BillingDetails'))
+const EmployeeRoasterAuditReport = lazy(() => import('./Pages/AuditPages/EmployeeRoasterAudit'))
 const Header = lazy(() => import('./Components/Header'));
-const Status = lazy(() => import('./Pages/Invoices/UploadStatus'));
 const Dashboard = lazy(() => import('./Pages/Dashboard'));
 const Login = lazy(() => import('./Pages/Login'));
+const Signup = lazy(() => import('./Pages/Signup'))
 const Notifications = lazy(() => import('./Pages/Notifications'));
-const ErrorBoundary = lazy(()=> import('./Components/ErrorBoundaries'))
+const ErrorBoundary = lazy(() => import('./Components/ErrorBoundaries'))
 
 function AppContent() {
   const Jwt = Cookies.get('jwt_token');
@@ -56,19 +67,29 @@ function AppContent() {
             <Header />
             <section>
               <Routes>
-                <Route path='/Hughesnetwork-Management/Dashboard' element={<Dashboard />} key={location.pathname} />
-                <Route path='/Hughesnetwork-Management/Invoices/Upload-Authuntication' element={<InvoiceUploadAuthuntication />} key={location.pathname} />
-                <Route path='/Hughesnetwork-Management/Invoices/Upload' element={<Invoices />} key={location.pathname} />
-                <Route path='/Hughesnetwork-Management/Invoices/Upload-Status' element={<Status />} key={location.pathname} />
-                <Route path='/Hughesnetwork-Management/Notifications' element={<Notifications />} key={location.pathname} />
-                <Route path='*' element={<Navigate to='/Hughesnetwork-Management/Dashboard' replace />} />
+                <Route path='/Employee/Dashboard' element={<Dashboard />} key={location.pathname} />
+                <Route path='/Employee/Schedules' element={<SelfEmployeeSchedules />} key={location.pathname} />
+                <Route path='/Employee/Manage/Schedules' element={<SPOCScheduleManager />} key={location.pathname} />
+                <Route path='/Vechile/Billing-Policy' element={<BillingPolicy />} key={location.pathname} />
+                <Route path='/Employee/SPOC-Schedules' element={<SPOCSchedules />} key={location.pathname} />
+                <Route path='/Employeegrouped/pickup/SPOC-Schedules' element={<PickupGroupedSchedules />} key={location.pathname} />
+                <Route path='/Employeegrouped/drop/SPOC-Schedules' element={<DropGroupedSchedules />} key={location.pathname} />
+                <Route path='/Employee/Routing/Initialization' element={<RoutingInitialize />} key={location.pathname} />
+                <Route path='/Admin/SPOC-Schedules' element={<AdminSPOCSchedules />} key={location.pathname} />
+                <Route path='/Employee/Details' element={<EmployeesList />} key={location.pathname} />
+                <Route path='/Employee/Details/:id' element={<EmployeeDetails />} key={location.pathname} />
+                <Route path='/Employee/Roaster/Report' element={<EmployeeRoasterAuditReport />} key={location.pathname} />
+                <Route path='/Vehicle/Details' element={<VehicleDetails />} key={location.pathname} />
+                <Route path='/Vehicle/Billing' element={<BillingReport />} key={location.pathname} />
+                <Route path='*' element={<Navigate to='/Employee/Dashboard' replace />} />
               </Routes>
             </section>
           </>
         ) : (
           <Routes>
-            <Route path='/Hughesnetwork-Management/Login' element={<Login />} />
-            <Route path='*' element={<Navigate to='/Hughesnetwork-Management/Login' replace />} />
+            <Route path='/' element={<Login />} />
+            <Route path="/employee/signup" element={<Signup />} />
+            <Route path='*' element={<Navigate to='/' replace />} />
           </Routes>
         )}
       </div>
