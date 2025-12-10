@@ -108,8 +108,7 @@ const Login = () => {
             <div className="Login-lg">
                 <div className='login-form-container'>
                     <form className="login-in-form" onSubmit={checkCredentialsBeforeToSendToDB}>
-                        {/* <img src={process.env.PUBLIC_URL + '/Images/Hughes_Network_Systems_Logo-2048x523.png'} alt='hughes' className='hughes-logo' /> */}
-                        <h1>RIDE</h1>
+                        <img src='/Images/TEP.PA_BIG.png' alt='logo' className='hughes-logo' style={{ width: '208px', height: '38px', margin:'40px' }}/>                        
                         {Object.keys(credentialsError).length !== 0 && <h4 className='error-msg'>{credentialsError.msg}</h4>}
                         {/* <h3> Expense Management Software</h3> */}
                         <label htmlFor='username' className='label-text'>Mobile No<span className='mandatory'> *</span></label>

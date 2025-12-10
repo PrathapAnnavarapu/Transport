@@ -14,7 +14,7 @@ import Cookies from 'js-cookie'
 import Loader from '../../Components/Loader';
 
 const SPOCSchedules = () => {
- const navigate = useNavigate()
+  const navigate = useNavigate()
   const { warn, info, error, success } = Toast();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [inputValue, setInputValue] = useState('')
@@ -31,18 +31,32 @@ const SPOCSchedules = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true)
   const [file, setFile] = useState(null)
-  
 
 
-const handleFileChange = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    setFile(file);
-  }
-};
+  useEffect(() => {
+          const token = Cookies.get('jwt_token');
+          if (token) {
+              const decodedToken = jwtDecode(token);        
+          setUserDetails({
+              employee_id: decodedToken.sub,
+              employee_name: decodedToken.employee_name,
+              employee_email: decodedToken.employee_email,
+              role: decodedToken.role
+          });
+          }
+      }, []);
 
 
-const handleUpload = async () => {
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFile(file);
+    }
+  };
+
+
+  const handleUpload = async () => {
     if (!file) {
       error('Please select a file');
       return;
@@ -77,51 +91,50 @@ const handleUpload = async () => {
       },
     });
   };
-  
-    useEffect(() => {
-      const token = Cookies.get('jwt_token');
-      if (token) {
-        const decodedToken = jwtDecode(token);
-        setUserDetails(decodedToken.sub);
-      }
-    }, []);
-  
-  
-  
-    const fetchLazySchedules = (spocData) => {
-      setLoadingMore(true); // Start loader
-  
-      const visibleCount = visibleItems.length;
-      const nextItems = spocData.slice(visibleCount, visibleCount + 10);
-  
-      if (nextItems.length > 0) {
-        setVisibleItems(prev => [...prev, ...nextItems]);
-      } else {
-        setHasMore(false);
-      }
-      setLoadingMore(false); // Stop loader
-    };
-  
-  
-    const fetchSchedules = () => {
-      return new Promise((resolve, reject) => {
-        setApiProps({
-          method: 'GET',
-          url: 'api/get/employee-schedules/all',
-          render: (response) => {
-            if (response.data) {
-              setSpocschedules(response.data);
-              setVisibleItems([]);
-              setHasMore(true);
-              fetchLazySchedules(response.data);
-              resolve(response.data);
-            } else {
-              reject(new Error('Failed to load schedules'));
-            }
+
+
+
+
+  const fetchLazySchedules = (spocData) => {
+    setLoadingMore(true); // Start loader
+
+    const visibleCount = visibleItems.length;
+    const nextItems = spocData.slice(visibleCount, visibleCount + 10);
+
+    if (nextItems.length > 0) {
+      setVisibleItems(prev => [...prev, ...nextItems]);
+    } else {
+      setHasMore(false);
+    }
+    setLoadingMore(false); // Stop loader
+  };
+
+
+  const fetchSchedules = () => {
+    return new Promise((resolve, reject) => {
+      setLoadingMore(true);
+      setApiProps({
+        method: 'GET',
+        url: `api/get/spoc-employee-schedules/all?spocName=${encodeURIComponent(userDetails.employee_name)}`,
+        render: (response) => {
+          if (response.data) {
+            setSpocschedules(response.data);
+            setVisibleItems([]);
+            setHasMore(true);
+            fetchLazySchedules(response.data);
+            resolve(response.data);
+          } else {
+            reject(new Error('Failed to load schedules'));
           }
-        });
+        },
+        catchError: (err) => {
+          reject(err);
+        }
       });
-    };
+      setLoadingMore(false);
+    });
+  };
+
 
 
 
@@ -191,7 +204,7 @@ const handleUpload = async () => {
       setEditingPickup(editingPickup)
       setApiProps({
         method: 'GET',
-        url: 'api/get/employee-schedules/all',
+        url: `api/get/spoc-employee-schedules/all?spocName=${encodeURIComponent(userDetails.employee_name)}`,
         render: (response) => {
           if (response.data) {
             setSpocschedules(response.data);
@@ -206,40 +219,40 @@ const handleUpload = async () => {
   }
 
   const handlePickupDelete = useCallback((employeeId, day) => {
-      const dateParts = day.split('/');
-      const dayVal = parseInt(dateParts[0], 10);
-      const monthVal = parseInt(dateParts[1], 10) - 1; // Months are 0-indexed
-      const yearVal = parseInt(dateParts[2], 10);
-    
-      const currentDateTime = new Date();
-    
-      const hasFuturePickup = pickupTimings.some(timing => {
-        const [hours, minutes, seconds = '00'] = timing.pickup_time.split(':');
-        const pickupDateTime = new Date(
-          yearVal,
-          monthVal,
-          dayVal,
-          parseInt(hours, 10),
-          parseInt(minutes, 10),
-          parseInt(seconds, 10)
-        );  
-    
-        return pickupDateTime - currentDateTime >= 6 * 60 * 60 * 1000;
-      });  
-    
-      if (!hasFuturePickup) {
-        warn('No selected pickup timings available for deletion.');
-        return;
-      }  
-      const formattedDate = `${yearVal}-${String(monthVal + 1).padStart(2, '0')}-${String(dayVal).padStart(2, '0')}`;
-    
-      setApiProps({
-        method: 'DELETE',
-        url: `api/employee/pickup-schedule/delete/${employeeId}/${formattedDate}`,
-        render: handleDeletePickupApiResponse,
-      });
-    
-    }, [pickupTimings]);
+    const dateParts = day.split('/');
+    const dayVal = parseInt(dateParts[0], 10);
+    const monthVal = parseInt(dateParts[1], 10) - 1; // Months are 0-indexed
+    const yearVal = parseInt(dateParts[2], 10);
+
+    const currentDateTime = new Date();
+
+    const hasFuturePickup = pickupTimings.some(timing => {
+      const [hours, minutes, seconds = '00'] = timing.pickup_time.split(':');
+      const pickupDateTime = new Date(
+        yearVal,
+        monthVal,
+        dayVal,
+        parseInt(hours, 10),
+        parseInt(minutes, 10),
+        parseInt(seconds, 10)
+      );
+
+      return pickupDateTime - currentDateTime >= 6 * 60 * 60 * 1000;
+    });
+
+    if (!hasFuturePickup) {
+      warn('No selected pickup timings available for deletion.');
+      return;
+    }
+    const formattedDate = `${yearVal}-${String(monthVal + 1).padStart(2, '0')}-${String(dayVal).padStart(2, '0')}`;
+
+    setApiProps({
+      method: 'DELETE',
+      url: `api/employee/pickup-schedule/delete/${employeeId}/${formattedDate}`,
+      render: handleDeletePickupApiResponse,
+    });
+
+  }, [pickupTimings]);
 
 
   const handleDeleteDropApiResponse = (response) => {
@@ -248,7 +261,7 @@ const handleUpload = async () => {
       setEditingDrop(editingDrop)
       setApiProps({
         method: 'GET',
-        url: 'api/get/employee-schedules/all',
+        url: `api/get/spoc-employee-schedules/all?spocName=${encodeURIComponent(userDetails.employee_name)}`,
         render: (response) => {
           if (response.data) {
             setSpocschedules(response.data);
@@ -264,34 +277,34 @@ const handleUpload = async () => {
 
 
   const handleDropDelete = useCallback((employeeId, day) => {
-      const dateParts = day.split('/');
-      const dayVal = parseInt(dateParts[0], 10);
-      const monthVal = parseInt(dateParts[1], 10) - 1; // JS months are 0-based
-      const yearVal = parseInt(dateParts[2], 10);
-    
-      const currentDateTime = new Date();
-    
-      const hasFutureDrop = dropTimings.some(timing => {
-        const [hours, minutes, seconds = '00'] = timing.drop_time.split(':');
-        const dropDateTime = new Date(yearVal, monthVal, dayVal, parseInt(hours), parseInt(minutes), parseInt(seconds));  
-    
-        return dropDateTime - currentDateTime >= 4 * 60 * 60 * 1000;;
-      });  
-    
-      if (!hasFutureDrop) {
-        warn('No selected drop timings available for deletion.');
-        return;
-      }
-  
-      const formattedDate = `${yearVal}-${String(monthVal + 1).padStart(2, '0')}-${String(dayVal).padStart(2, '0')}`;
-    
-      setApiProps({
-        method: 'DELETE',
-        url: `api/employee/drop-schedule/delete/${employeeId}/${formattedDate}`,
-        render: handleDeleteDropApiResponse,
-      });
-    
-    }, [dropTimings]);
+    const dateParts = day.split('/');
+    const dayVal = parseInt(dateParts[0], 10);
+    const monthVal = parseInt(dateParts[1], 10) - 1; // JS months are 0-based
+    const yearVal = parseInt(dateParts[2], 10);
+
+    const currentDateTime = new Date();
+
+    const hasFutureDrop = dropTimings.some(timing => {
+      const [hours, minutes, seconds = '00'] = timing.drop_time.split(':');
+      const dropDateTime = new Date(yearVal, monthVal, dayVal, parseInt(hours), parseInt(minutes), parseInt(seconds));
+
+      return dropDateTime - currentDateTime >= 4 * 60 * 60 * 1000;;
+    });
+
+    if (!hasFutureDrop) {
+      warn('No selected drop timings available for deletion.');
+      return;
+    }
+
+    const formattedDate = `${yearVal}-${String(monthVal + 1).padStart(2, '0')}-${String(dayVal).padStart(2, '0')}`;
+
+    setApiProps({
+      method: 'DELETE',
+      url: `api/employee/drop-schedule/delete/${employeeId}/${formattedDate}`,
+      render: handleDeleteDropApiResponse,
+    });
+
+  }, [dropTimings]);
 
 
   const handlePickupApiResponse = (response) => {
@@ -300,7 +313,7 @@ const handleUpload = async () => {
       setEditingPickup(editingPickup)
       setApiProps({
         method: 'GET',
-        url: 'api/get/employee-schedules/all',
+        url: `api/get/spoc-employee-schedules/all?spocName=${encodeURIComponent(userDetails.employee_name)}`,
         render: (response) => {
           if (response.data) {
             setSpocschedules(response.data);
@@ -356,7 +369,7 @@ const handleUpload = async () => {
       setEditingDrop(editingDrop)
       setApiProps({
         method: 'GET',
-        url: 'api/get/employee-schedules/all',
+        url: `api/get/spoc-employee-schedules/all?spocName=${encodeURIComponent(userDetails.employee_name)}`,
         render: (response) => {
           if (response.data) {
             setSpocschedules(response.data);
@@ -441,7 +454,7 @@ const handleUpload = async () => {
 
   const isPickupTimeWithinPolicy = (pickupTime, weekDay) => {
     if (!pickupTime || pickupTime === ' -- : --') return true; // Allow if no pickup time
-    
+
     const currentDateTime = new Date();
     const dateParts = weekDay.split('/');
     const pickupDateTime = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}T${pickupTime}`);
@@ -453,7 +466,7 @@ const handleUpload = async () => {
 
   const isDropTimeWithinPolicy = (dropTime, weekDay) => {
     if (!dropTime || dropTime === ' -- : --') return true; // Allow if no pickup time
-    
+
     const currentDateTime = new Date();
     const dateParts = weekDay.split('/');
     const dropDateTime = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}T${dropTime}`);
@@ -468,101 +481,101 @@ const handleUpload = async () => {
       {apiProps && <ApiComponent {...apiProps} />}
       <div className='action-buttons-container'>
         <WeekRangePicker numberOfWeeks={7} onWeekSelect={handleWeekSelect} />
-        <input type="text" placeholder="Search..." className='search-input' onChange={(e)=>setInputValue(e.target.value)} value={inputValue}/>
+        <input type="text" placeholder="Search..." className='search-input' onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
         {/* <div>
           <Button type='button' className='primary-button' text='Upload' />
         </div> */}
       </div>
-     <div className='spoc-infinte-scroll-containers'>
-      <InfiniteScroll dataLength={visibleItems.length} pullDownToRefreshThreshold={50} next={() => fetchLazySchedules(spocschedules)} hasMore={hasMore} >
-      <div className='spoc-schedules-list'>
-        <ul>
-          {spocschedules.map((each) => (
-            <li key={each.employee_id}>
-              <h4>
-                <span className='employee-name' onClick={()=> navigate(`/Employee/Details/${each.employee_id}`)}>{each.employee_name}</span> - <span className='employee-id'>{each.employee_id}</span>
-              </h4>
-              <div className='employee-week-schedule'>
-                {weekDays.map((weekDay, index) => {
-                  let pickup = ' -- : --';
-                  let drop = ' -- : --';
+      <div className='spoc-infinte-scroll-containers'>
+        <InfiniteScroll dataLength={visibleItems.length} pullDownToRefreshThreshold={50} next={() => fetchLazySchedules(spocschedules)} hasMore={hasMore} >
+          <div className='spoc-schedules-list'>
+            <ul>
+              {spocschedules.map((each) => (
+                <li key={each.employee_id}>
+                  <h4>
+                    <span className='employee-name' onClick={() => navigate(`/Employee/Details/${each.employee_id}`)}>{each.employee_name}</span> - <span className='employee-id'>{each.employee_id}</span>
+                  </h4>
+                  <div className='employee-week-schedule'>
+                    {weekDays.map((weekDay, index) => {
+                      let pickup = ' -- : --';
+                      let drop = ' -- : --';
 
-                  // Ensure correct date format
-                  const dateParts = weekDay.split('/');
-                  const date = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-                  const formattedDate = date.toISOString().split('T')[0];
+                      // Ensure correct date format
+                      const dateParts = weekDay.split('/');
+                      const date = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+                      const formattedDate = date.toISOString().split('T')[0];
 
-                  each.schedules.forEach((schedule) => {
-                    if (schedule.shift_date === formattedDate) {
-                      pickup = schedule.pickup_time ? schedule.pickup_time : ' -- : --';
-                      drop = schedule.drop_time ? schedule.drop_time : ' -- : --';
-                    }
-                  });
+                      each.schedules.forEach((schedule) => {
+                        if (schedule.shift_date === formattedDate) {
+                          pickup = schedule.pickup_time ? schedule.pickup_time : ' -- : --';
+                          drop = schedule.drop_time ? schedule.drop_time : ' -- : --';
+                        }
+                      });
 
-                  const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
 
-                  return (
-                    <div key={index} className='day-schedule'>
-                      <strong>{dayName} ({weekDay})</strong>
-                      <div>
-                        <label>Pickup:</label>
-                        {editingPickup && editingPickup.employeeId === each.employee_id && editingPickup.day === weekDay ? (
-                          <select
-                            onChange={(event) => handlePickupChange(event, each.employee_id, weekDay)}
-                          >
-                            <option>Select</option>
-                            {editingPickup.eligiblePickupTimings.map((timing, idx) => (
-                              <option key={idx} value={idx}>{timing.pickup_time}</option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input type="text" value={pickup} readOnly className='time-class' />
-                        )}
-                        {!isPastDate(weekDay) && isWithinAdvancePeriod(weekDay) && isPickupTimeWithinPolicy(pickup, weekDay) && (
-                          <>
-                            <MdEdit className='edit-icon' onClick={() => handleEditPickup(each.employee_id, weekDay)} />
-                            <MdOutlineDeleteOutline className='delete-icon' onClick={() => handlePickupDelete(each.employee_id, weekDay)} />
-                          </>
-                        )}
-                      </div>
-                      <div>
-                        <label>Drop:</label>
-                        {editingDrop && editingDrop.employeeId === each.employee_id && editingDrop.day === weekDay ? (
-                          <select onChange={(event) => handleDropChange(event, each.employee_id, weekDay)}
-                          >
-                            <option>Select</option>
-                            {editingDrop.eligibleDropTimings.map((timing, idx) => (
-                              <option key={idx} value={idx}>{timing.drop_time}</option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input type="text" value={drop} readOnly className='time-class' />
-                        )}
-                        {!isPastDate(weekDay) && isWithinAdvancePeriod(weekDay) && isDropTimeWithinPolicy(drop, weekDay) && (
-                          <>
-                            <MdEdit className='edit-icon' onClick={() => handleEditDrop(each.employee_id, weekDay)} />
-                            <MdOutlineDeleteOutline className='delete-icon' onClick={() => handleDropDelete(each.employee_id, weekDay)} />
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-      </InfiniteScroll>
+                      return (
+                        <div key={index} className='day-schedule'>
+                          <strong>{dayName} ({weekDay})</strong>
+                          <div>
+                            <label>Pickup:</label>
+                            {editingPickup && editingPickup.employeeId === each.employee_id && editingPickup.day === weekDay ? (
+                              <select
+                                onChange={(event) => handlePickupChange(event, each.employee_id, weekDay)}
+                              >
+                                <option>Select</option>
+                                {editingPickup.eligiblePickupTimings.map((timing, idx) => (
+                                  <option key={idx} value={idx}>{timing.pickup_time}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <input type="text" value={pickup} readOnly className='time-class' />
+                            )}
+                            {!isPastDate(weekDay) && isWithinAdvancePeriod(weekDay) && isPickupTimeWithinPolicy(pickup, weekDay) && (
+                              <>
+                                <MdEdit className='edit-icon' onClick={() => handleEditPickup(each.employee_id, weekDay)} />
+                                <MdOutlineDeleteOutline className='delete-icon' onClick={() => handlePickupDelete(each.employee_id, weekDay)} />
+                              </>
+                            )}
+                          </div>
+                          <div>
+                            <label>Drop:</label>
+                            {editingDrop && editingDrop.employeeId === each.employee_id && editingDrop.day === weekDay ? (
+                              <select onChange={(event) => handleDropChange(event, each.employee_id, weekDay)}
+                              >
+                                <option>Select</option>
+                                {editingDrop.eligibleDropTimings.map((timing, idx) => (
+                                  <option key={idx} value={idx}>{timing.drop_time}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <input type="text" value={drop} readOnly className='time-class' />
+                            )}
+                            {!isPastDate(weekDay) && isWithinAdvancePeriod(weekDay) && isDropTimeWithinPolicy(drop, weekDay) && (
+                              <>
+                                <MdEdit className='edit-icon' onClick={() => handleEditDrop(each.employee_id, weekDay)} />
+                                <MdOutlineDeleteOutline className='delete-icon' onClick={() => handleDropDelete(each.employee_id, weekDay)} />
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </InfiniteScroll>
       </div>
       <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
         <div className='operations-bar'>
           <div>
             <input type="file" accept=".xls,.xlsx,.csv" onChange={handleFileChange} />
-            <Button type="button" text='upload' className='primary-button' onClick={handleUpload}/>
+            <Button type="button" text='upload' className='primary-button' onClick={handleUpload} />
           </div>
           {/* <Button type="button" text='Download' className='primary-button' /> */}
-        </div>        
+        </div>
       </Popup>
     </form>
 

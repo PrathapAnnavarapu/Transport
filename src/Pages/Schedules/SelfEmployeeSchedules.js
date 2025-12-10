@@ -24,14 +24,19 @@ const EmployeeSchedules = () => {
   const [editingDrop, setEditingDrop] = useState(null);
   const [userDetails, setUserDetails] = useState({});
 
-  
+
 
 
   useEffect(() => {
     const token = Cookies.get('jwt_token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      setUserDetails(decodedToken.sub);
+      setUserDetails({
+        employee_id: decodedToken.sub,
+        employee_name: decodedToken.employee_name,
+        employee_email: decodedToken.employee_email,
+        role: decodedToken.role
+      });
     }
   }, []);
 
@@ -398,7 +403,7 @@ const EmployeeSchedules = () => {
           {spocschedules.map((each) => (
             <li key={each.employee_id}>
               <h4>
-                <span className='employee-name' onClick={()=> navigate(`/Employee/Details/${each.employee_id}`)}>{each.employee_name}</span> - <span className='employee-id'>{each.employee_id}</span>
+                <span className='employee-name' onClick={() => navigate(`/Employee/Details/${each.employee_id}`)}>{each.employee_name}</span> - <span className='employee-id'>{each.employee_id}</span>
               </h4>
               <div className='employee-week-schedule'>
                 {weekDays.map((weekDay, index) => {

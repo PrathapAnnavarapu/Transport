@@ -1,0 +1,323 @@
+import React, { useState, useMemo } from "react";
+import {
+  DndContext,
+  useDraggable,
+  useDroppable,
+  closestCenter
+} from "@dnd-kit/core";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+// Helper: Draggable field pill
+function FieldPill({ field, label, draggableId, zone }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: draggableId,
+    data: { zone, key: field, label }
+  });
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={{
+        background: isDragging ? "#84c1ff" : "#f8f8fc",
+        border: "1px solid #dde",
+        color: "#222",
+        borderRadius: 12,
+        padding: "6px 12px",
+        margin: "4px 0",
+        fontSize: 14,
+        cursor: "grab"
+      }}
+    >
+      {label || field}
+    </div>
+  );
+}
+
+// Axis drop zone
+function AxisDropZone({ label, assignedFields, onRemove, droppableId }) {
+  const { setNodeRef, isOver } = useDroppable({ id: droppableId });
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        minHeight: 48,
+        border: isOver ? "2px solid #3c8ed9" : "1px dashed #bbb",
+        background: isOver ? "#edf6ff" : "",
+        marginBottom: 10,
+        padding: 10,
+        borderRadius: 8,
+        display: "flex",
+        gap: 8,
+        alignItems: "center"
+      }}
+    >
+      <b style={{ marginRight: 6 }}>{label}:</b>
+      {assignedFields.length === 0 && (
+        <span style={{ color: "#aaa", fontSize: 14 }}>Drop Field Here</span>
+      )}
+      {assignedFields.map((f, i) => (
+        <span
+          key={f.key}
+          style={{
+            background: "#333",
+            color: "#fff",
+            padding: "2px 8px",
+            borderRadius: 8,
+            fontSize: 14,
+            display: "flex",
+            alignItems: "center"
+          }}
+        >
+          {f.label}
+          <button
+            onClick={() => onRemove(i)}
+            style={{
+              marginLeft: 7,
+              background: "transparent",
+              border: "none",
+              color: "#fff",
+              fontWeight: "bold",
+              cursor: "pointer",
+              lineHeight: 1
+            }}
+          >
+            ×
+          </button>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// Main component
+const DragDropChartExplorer = ({ headers = [], data = [], topN = 10 }) => {
+  
+  const safeHeaders = Array.isArray(headers) ? headers : [];
+  const safeData = Array.isArray(data) ? data : [];
+
+  console.log(safeHeaders)
+  console.log(safeData)
+
+  const initialFields = safeHeaders.map((h) => ({
+    key: h.key || h,
+    label: h.label || h.key || h
+  }));
+
+  const [availableFields, setAvailableFields] = useState(initialFields);
+  const [xAxisFields, setXAxisFields] = useState([]);
+  const [yAxisFields, setYAxisFields] = useState([]);
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over || !active?.data?.current) return;
+
+    const { key, label } = active.data.current;
+    const fieldObj = { key, label };
+
+    // Remove from all zones
+    const updatedAvailable = availableFields.filter((f) => f.key !== key);
+    const updatedX = xAxisFields.filter((f) => f.key !== key);
+    const updatedY = yAxisFields.filter((f) => f.key !== key);
+
+    if (over.id === "fields") {
+      setAvailableFields([...updatedAvailable, fieldObj]);
+      setXAxisFields(updatedX);
+      setYAxisFields(updatedY);
+    } else if (over.id === "xAxis") {
+      setXAxisFields([fieldObj]);
+      setAvailableFields(updatedAvailable);
+      setYAxisFields(updatedY);
+    } else if (over.id === "yAxis") {
+      setYAxisFields([fieldObj]);
+      setAvailableFields(updatedAvailable);
+      setXAxisFields(updatedX);
+    }
+  }
+
+  // Prepare chart data dynamically based on selected fields and data
+const chartData = useMemo(() => {
+  if (!xAxisFields.length || !yAxisFields.length) return { labels: [], datasets: [] };
+
+  const xKey = xAxisFields[0].key;
+  const yKey = yAxisFields[0].key;
+
+  const grouped = safeData.reduce((acc, row) => {
+    const xValue = String(row[xKey]);
+    const yValue = parseFloat(row[yKey]);
+
+    if (!xValue || isNaN(yValue)) return acc;
+
+    acc[xValue] = (acc[xValue] || 0) + yValue;
+    return acc;
+  }, {});
+
+  const labels = Object.keys(grouped);
+  const values = Object.values(grouped);
+
+  return {
+    labels,
+    datasets: [
+      {
+        label: `Sum of ${yAxisFields[0].label || yKey}`,
+        data: values,
+        backgroundColor: "rgba(75,192,192,0.6)"
+      }
+    ]
+  };
+}, [xAxisFields, yAxisFields, safeData]);
+
+
+
+  const chartOptions = useMemo(() => {
+    if (!xAxisFields.length || !yAxisFields.length) return {};
+
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: `Bar Chart: ${xAxisFields[0]?.label || xAxisFields[0]?.key} vs ${
+            yAxisFields[0]?.label || yAxisFields[0]?.key
+          }`
+        }
+      },
+      scales: {
+        x: {
+          type: "category",
+          title: {
+            display: true,
+            text: xAxisFields[0]?.label || xAxisFields[0]?.key
+          },
+          ticks: {
+            display: true,
+            autoSkip: false,
+            maxRotation: 60,
+            minRotation: 45,
+            color: "#444"
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: yAxisFields[0]?.label || yAxisFields[0]?.key
+          },
+          ticks: {
+            display: true,
+            color: "#444"
+          },
+          grid: {
+            display: true
+          }
+        }
+      }
+    };
+  }, [xAxisFields, yAxisFields]);
+
+  return (
+    <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          height: "94%",
+          width: "100%",
+          boxSizing: "border-box"
+        }}
+      >
+        {/* Left Panel: Fields */}
+        <div
+          style={{
+            minWidth: 180,
+            background: "#f7f8fc",
+            borderRight: "1px solid #eee",
+            padding: 12,
+            overflowY: "auto"
+          }}
+          id="fields"
+        >
+          <h4 style={{ marginBottom: 10 }}>Field List</h4>
+          {availableFields.map((f) => (
+            <FieldPill
+              key={f.key}
+              field={f.key}
+              label={f.label}
+              draggableId={f.key}
+              zone="fields"
+            />
+          ))}
+        </div>
+
+        {/* Right Content: Axis + Chart */}
+        <div
+          style={{
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            padding: 20,
+            boxSizing: "border-box",
+            overflow: "auto"
+          }}
+        >
+          {/* Axis Drop Zones in a row */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 20,
+              marginBottom: 20
+            }}
+          >
+            <AxisDropZone
+              label="X-Axis"
+              assignedFields={xAxisFields}
+              droppableId="xAxis"
+              onRemove={(i) => {
+                setAvailableFields([...availableFields, xAxisFields[i]]);
+                setXAxisFields(xAxisFields.filter((_, idx) => idx !== i));
+              }}
+            />
+            <AxisDropZone
+              label="Y-Axis"
+              assignedFields={yAxisFields}
+              droppableId="yAxis"
+              onRemove={(i) => {
+                setAvailableFields([...availableFields, yAxisFields[i]]);
+                setYAxisFields(yAxisFields.filter((_, idx) => idx !== i));
+              }}
+            />
+          </div>
+
+          {/* Chart */}
+          <div style={{ flexGrow: 1, minHeight: 300 }}>
+            <Bar
+              key={`${xAxisFields[0]?.key || ""}-${yAxisFields[0]?.key || ""}`}
+              data={chartData}
+              options={chartOptions}
+              redraw
+            />
+          </div>
+        </div>
+      </div>
+    </DndContext>
+  );
+};
+
+export default DragDropChartExplorer;

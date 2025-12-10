@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   TrendingUp,
   TrendingDown,
@@ -18,11 +18,12 @@ const Dashboard = () => {
   const [todayBillingDetails, setTodayBillingDetails] = useState([])
   const [billingReports, setBillingReports] = useState([])
   const [apiProps, setApiProps] = useState(null);
+  const [employeesLength, setEmployeesLength] = useState(0)
 
   const amountSpentToady = todayBillingDetails.reduce((sum, trip) => sum + trip.fare_amount, 0).toLocaleString('en-IN');
-   
-  const totoalAmountSpent =  billingReports.reduce((sum, trip) => sum + trip.fare_amount, 0).toLocaleString('en-IN');
-  
+
+  const totoalAmountSpent = billingReports.reduce((sum, trip) => sum + trip.fare_amount, 0).toLocaleString('en-IN');
+
   const thisMonthAmountSpent = billingReports.reduce((sum, trip) => {
     const tripDate = new Date(trip.trip_date);
     if (tripDate.getMonth() === new Date().getMonth()) {
@@ -33,19 +34,18 @@ const Dashboard = () => {
 
 
   const paidBillsTotal = billingReports
-  .filter(trip => trip.status === 'paid')
-  .reduce((sum, trip) => sum + trip.fare_amount, 0)
-  .toLocaleString('en-IN');
+    .filter(trip => trip.status === 'paid')
+    .reduce((sum, trip) => sum + trip.fare_amount, 0)
+    .toLocaleString('en-IN');
 
   const unpaidBillsTotal = billingReports
-  .filter(trip => trip.status === 'unpaid')
-  .reduce((sum, trip) => sum + trip.fare_amount, 0)
-  .toLocaleString('en-IN');
+    .filter(trip => trip.status === 'unpaid')
+    .reduce((sum, trip) => sum + trip.fare_amount, 0)
+    .toLocaleString('en-IN');
 
 
 
-
- useEffect(() => {
+  useEffect(() => {
     if (todayBillingDetails.length === 0) {
       setApiProps({
         method: 'GET',
@@ -63,8 +63,8 @@ const Dashboard = () => {
       });
     }
 
-    if (billingReports.length === 0){ 
-     setApiProps({
+    if (billingReports.length === 0) {
+      setApiProps({
         method: 'GET',
         url: 'api/get/billing-report',
         render: (response) => {
@@ -77,9 +77,14 @@ const Dashboard = () => {
         onError: (error) => {
           error('Error fetching vehicles:', error);
         }
-      });  
-    }  
+      });
+    }    
   }, [billingReports, todayBillingDetails])
+
+
+  
+
+
 
   const headers = [
     { key: 'Trip ID', label: 'Trip ID' },
@@ -87,15 +92,15 @@ const Dashboard = () => {
     { key: 'Shift Date', label: 'Shift Date' },
     { key: 'Pickup/Drop Shift Time', label: 'Pickup/Drop Shift Time' },
     { key: 'Vehicle Number', label: 'Vehicle Number' },
-    { key: 'Vehicle Owner', label: 'Vehicle Owner' },   
+    { key: 'Vehicle Owner', label: 'Vehicle Owner' },
     { key: 'Distance Travelled', label: 'Distance Travelled' },
     { key: 'Fare Amount', label: 'Fare Amount' },
     { key: 'Payment Status', label: 'Payment Status' },
     { key: 'Route Name', label: 'Route Name' },
     { key: 'Billing Mode', label: 'Billing Mode' },
-    { key: 'Employee Names', label: 'Employee Names' },   
+    { key: 'Employee Names', label: 'Employee Names' },
     { key: 'Trip Scheduled Date', label: 'Trip Scheduled Date' },
-    { key: 'Vehicle Assigned at', label: 'Vehicle Assigned at'},
+    { key: 'Vehicle Assigned at', label: 'Vehicle Assigned at' },
     { key: 'Trip Started At', label: 'Trip Started At' },
     { key: 'Trip Ended At', label: 'Trip Ended At' },
   ];
@@ -110,7 +115,7 @@ const Dashboard = () => {
     'Payment Status': item.status,
     'Distance Travelled': `${item.distance_travelled} Km`,
     'Route Name': item.route_name,
-    'Billing Mode': item.billing_mode,    
+    'Billing Mode': item.billing_mode,
     'Vehicle Assigned at': item.vehicle_assigned_at,
     'Employee Names': item.employees.map(e => e.employee_name).join(', '),
     'Shift Date': item.shift_dates.join(', '),
@@ -174,7 +179,7 @@ const Dashboard = () => {
           /> */}
           <StatsCard
             label="Active Users"
-            value="872"
+            value={employeesLength}
             icon={<Users className="icon green" />}
             color="green-bg"
           />

@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import Cookies from 'js-cookie';
 import Loader from './Components/Loader';
+import { jwtDecode } from 'jwt-decode';
 import './App.css';
 
 
@@ -20,8 +21,8 @@ const EmployeesList = lazy(() => import('./Pages/Employees/EmployeesList'))
 const EmployeeDetails = lazy(() => import('./Pages/Employees/EmployeeDetails'))
 const VehicleDetails = lazy(() => import('./Pages/Vehicle/Vehicles'))
 const SelfEmployeeSchedules = lazy(() => import('./Pages/Schedules/SelfEmployeeSchedules'))
-const PickupGroupedSchedules = lazy(() => import('./Pages/Schedules/PickupGroupingSchedules'))
-const DropGroupedSchedules = lazy(() => import('./Pages/Schedules/DropGroupingSchedules'))
+const PickupGroupedSchedules = lazy(() => import('./Pages/Routing/PickupRouting'))
+const DropGroupedSchedules = lazy(() => import('./Pages/Routing/DropRouting'))
 const RoutingInitialize = lazy(() => import('./Pages/Routing/RouteInitializing'))
 const BillingReport = lazy(() => import('./Pages/Billing/BillingDetails'))
 const EmployeeRoasterAuditReport = lazy(() => import('./Pages/AuditPages/EmployeeRoasterAudit'))
@@ -31,12 +32,15 @@ const Login = lazy(() => import('./Pages/Login'));
 const Signup = lazy(() => import('./Pages/Signup'))
 const Notifications = lazy(() => import('./Pages/Notifications'));
 const ErrorBoundary = lazy(() => import('./Components/ErrorBoundaries'))
+const ManageSpocs = lazy(() => import('./Pages/Spocs/Spocs'))
+const LocationsList = lazy(()=> import('./Pages/Locations/LocationsList'))
 
 function AppContent() {
   const Jwt = Cookies.get('jwt_token');
   const location = useLocation();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false); // This should be dynamically set based on your authentication logic
+  const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
     if (Jwt !== undefined) {
@@ -58,6 +62,20 @@ function AppContent() {
       navigate(lastPath, { replace: true });
     }
   }, [navigate]);
+
+
+  useEffect(() => {
+    const token = Cookies.get('jwt_token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserDetails({
+        employee_id: decodedToken.sub,
+        employee_name: decodedToken.employee_name,
+        employee_email: decodedToken.employee_email,
+        role: decodedToken.role
+      });
+    }
+  }, []);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -81,6 +99,8 @@ function AppContent() {
                 <Route path='/Employee/Roaster/Report' element={<EmployeeRoasterAuditReport />} key={location.pathname} />
                 <Route path='/Vehicle/Details' element={<VehicleDetails />} key={location.pathname} />
                 <Route path='/Vehicle/Billing' element={<BillingReport />} key={location.pathname} />
+                <Route path='/Manage/SPOC' element={<ManageSpocs />} key={location.pathname} />
+                <Route path='/Manage/Locations' element={<LocationsList />} key={location.pathname} />
                 <Route path='*' element={<Navigate to='/Employee/Dashboard' replace />} />
               </Routes>
             </section>

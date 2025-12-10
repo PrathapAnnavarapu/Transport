@@ -96,7 +96,7 @@ const SPOCSchedules = () => {
   }, []);
 
 
-  const fetchLazySchedules = (spocData) => {
+  const fetchLazySchedules = (spocData) => {    
     setLoadingMore(true); // Start loader
 
     const visibleCount = visibleItems.length;
@@ -113,6 +113,7 @@ const SPOCSchedules = () => {
 
   const fetchSchedules = () => {
     // return new Promise((resolve, reject) => {
+       setLoadingMore(true); 
       setApiProps({
         method: 'GET',
         url: 'api/get/employee-schedules/all',
@@ -126,6 +127,7 @@ const SPOCSchedules = () => {
           } else {
             error('Failed to load schedules');
           }
+          setLoadingMore(false);
         }
       
       });
@@ -539,6 +541,7 @@ const SPOCSchedules = () => {
           {/* <Button type="button" text='Download' className='primary-button' /> */}
         </div>
       </Popup>
+      
     </form>
   );
 };

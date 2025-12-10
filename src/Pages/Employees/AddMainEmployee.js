@@ -40,7 +40,7 @@ const CreateEmployee = () => {
         // Set API Props for file upload using setApiProps
         setApiProps({
             method: 'POST',
-            url: 'api/upload/schedules/matrix',  // Endpoint for file upload
+            url: 'api/upload/employees',  // Endpoint for file upload
             postData: formData,           
             render: (response) => {
                 success(response.data.message || 'File uploaded successfully');

@@ -6,28 +6,31 @@ import { MdEdit, MdOutlineDeleteOutline } from 'react-icons/md';
 import Button from '../../Components/Button';
 import AddEmployeeDetails from './AddMainEmployee'; // Import form
 import Popup from '../../Components/Model'; // Import modal
+import ToastComponent from '../../Components/Toast';
 
 const Employess = () => {
+    const { success } = ToastComponent()
     const [employees, setEmployees] = useState([]);
     const [apiProps, setApiProps] = useState(null);
     const [filter, setFilter] = useState('');
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [hasFetched, setHasFetched] = useState(false);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+
 
     useEffect(() => {
-        if (!hasFetched) {
-            setApiProps({
-                method: 'GET',
-                url: 'api/employees/all',
-                render: (response) => {
-                    if (response?.data) {
-                        setEmployees(response.data);
-                        setHasFetched(true); // Mark API as fetched
-                    }
+        setApiProps({
+            method: 'GET',
+            url: 'api/employees/all',
+            render: (response) => {
+                if (response?.data) {
+                    console.log(response)
+                    setEmployees(response.data);
                 }
-            });
-        }
-    }, [hasFetched]);
+            }
+        });
+    }, []);
+
 
 
 
@@ -39,6 +42,8 @@ const Employess = () => {
         )
         : [];
 
+
+
     const headers = [
         { key: 'Action', label: 'Action' },
         { key: 'ID', label: 'Employee ID' },
@@ -48,10 +53,29 @@ const Employess = () => {
         { key: 'Emp Mail ID', label: 'Emp Mail ID' },
         { key: 'Process', label: 'Process' },
         { key: 'Role', label: 'Role' },
+        { key: 'Active Status', label: 'Active Status' },
         { key: 'POC Name', label: 'POC Name' },
         { key: 'POC No', label: 'POC No' },
-        { key: 'Emp Address', label: 'Emp Address' },
+        { key: 'Work Location', label: 'Work Location' },
+        { key: 'Emp Address', label: 'Emp Address' }
     ];
+
+    const handleEditEmployee = (item) => {
+        setSelectedEmployee(item)
+        setIsPopupOpen(true)
+    }
+
+    const handleDeleteEmployee = (employeeId) => {
+        setApiProps({
+            method: 'DELETE',
+            url: `api/users/delete/${employeeId}`,
+            render: (response) => {
+                if (response?.data) {
+                    success(response.data.message);
+                }
+            }
+        });
+    }
 
     const rowData = filteredItems.map(item => ({
         'ID': item.employee_id,
@@ -61,13 +85,27 @@ const Employess = () => {
         'Emp Mail ID': item.employee_email,
         'Process': item.process,
         'Role': item.role,
+        'Active Status': item.active_status,
         'Emp Address': item.employee_address,
+        'Work Location': item.work_location,
         'POC Name': item.poc_name,
-        'POC No': item.poc_no,
+        'POC No': item.poc_mobile_no,
         'Action': (
             <div>
-                <button className='edit-action-button'><MdEdit /></button>
-                <button className='delete-action-button'><MdOutlineDeleteOutline /></button>
+                <button
+                    type="button"
+                    className='edit-action-button'
+                    onClick={() => handleEditEmployee(item)}
+                >
+                    <MdEdit />
+                </button>
+                <button
+                    type="button"
+                    className='delete-action-button'
+                    onClick={() => handleDeleteEmployee(item.employee_id)}
+                >
+                    <MdOutlineDeleteOutline />
+                </button>
             </div>
         )
     }));
@@ -75,7 +113,6 @@ const Employess = () => {
     return (
         <form className='employess-details-main-container'>
             {apiProps && <ApiComponent {...apiProps} />}
-
             <div className='action-buttons-container'>
                 <input
                     type="text"
@@ -87,7 +124,7 @@ const Employess = () => {
                 <Button
                     type='button'
                     text="Add +"
-                    onClick={() => setIsPopupOpen(true)}
+                    onClick={() => { setSelectedEmployee(null); setIsPopupOpen(true) }}
                     className='primary-button'
                 />
             </div>
@@ -101,7 +138,13 @@ const Employess = () => {
             </div>
             {/* Modal for AddEmployeeDetails */}
             <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} specialClass={true}>
-                <AddEmployeeDetails />
+                <AddEmployeeDetails
+                    employee={selectedEmployee}
+                    onSuccess={() => {
+                        setIsPopupOpen(false);
+                        setHasFetched(false);
+                    }}
+                />
             </Popup>
         </form>
     );

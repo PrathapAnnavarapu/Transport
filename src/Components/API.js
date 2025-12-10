@@ -11,17 +11,20 @@ const ApiComponent = ({ method, url, postData, render, contentType = 'applicatio
   const [loading, setLoading] = useState(true);
   const isMountedRef = useRef(true); // avoid triggering useEffect
 
+
+
   useEffect(() => {
     isMountedRef.current = true;
 
     const fetchData = async () => {
       try {
-        const token = Cookies.get('jwt_token');
+        const token = Cookies.get('jwt_token');        
         const endPoint = `http://127.0.0.1:5001/${url}`;
 
         const isFormData = postData instanceof FormData;
         const headers = {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,    
+          "X-Request-Source": "Web"        
         };
 
         if (!isFormData) {

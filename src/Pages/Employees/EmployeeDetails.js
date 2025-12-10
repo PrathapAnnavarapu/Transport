@@ -16,7 +16,7 @@ const EmployeeDetails = () => {
   const [distance, setDistance] = useState(null); // in kilometers
   const didFetchRef = useRef(false);
 
-  console.log(distance)
+  
 
   // This function fetches employee details and sets state
   const fetchEmployeeDetails = () => {
