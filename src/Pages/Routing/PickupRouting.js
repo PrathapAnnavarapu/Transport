@@ -49,21 +49,21 @@ const PickupGroupingSchedules = () => {
     const [selectedDate, setSelectedDate] = useState(() => new Date());
     const [apiProps, setApiProps] = useState(null);
     const [editable, setEditable] = useState({});
-    const [vechilesList, setVechileList] = useState([]);
+    const [vehiclesList, setVehicleList] = useState([]);  // ✅ Fixed typo
     const [mapClusterData, setMapClusterData] = useState(null);
     const [routingStatus, setRoutingStatus] = useState({});
     const prevManualClustersRef = useRef();
 
 
     const totalRoutes = Object.keys(manualClusters).reduce((acc, pickupTime) => {
-    return acc + Object.keys(manualClusters[pickupTime]).length;
-}, 0);
+        return acc + Object.keys(manualClusters[pickupTime]).length;
+    }, 0);
 
     const totalEmployees = Object.values(manualClusters).reduce((acc, clusters) => {
-    return acc + Object.values(clusters).reduce((clusterAcc, clusterData) => {
-        return clusterAcc + (clusterData?.employeeList?.length || 0);
+        return acc + Object.values(clusters).reduce((clusterAcc, clusterData) => {
+            return clusterAcc + (clusterData?.employeeList?.length || 0);
+        }, 0);
     }, 0);
-}, 0);
 
 
     useEffect(() => {
@@ -217,62 +217,62 @@ const PickupGroupingSchedules = () => {
     }, [selectedDate]);
 
     const fetchSchedules = (date, onComplete) => {
-    const formattedDate = date.toISOString().split('T')[0];
+        const formattedDate = date.toISOString().split('T')[0];
 
-    setApiProps({
-        method: 'POST',
-        url: 'api/get/pickup/clustered-routes',
-        postData: { date: formattedDate },
-        render: (response) => {
-            const optimizedRoutes = response.data.optimized_routes || [];
-            const initialClusters = {};
-            const pickupTimesToFetch = new Set();
+        setApiProps({
+            method: 'POST',
+            url: 'api/get/pickup/clustered-routes',
+            postData: { date: formattedDate },
+            render: (response) => {
+                const optimizedRoutes = response.data.optimized_routes || [];
+                const initialClusters = {};
+                const pickupTimesToFetch = new Set();
 
-            optimizedRoutes.forEach(route => {
-                const pickupTime = route.pickup_time_group;
-                const clusters = {};
-                route.clusters.forEach((cl, idx) => {
-                    const clusterId = `cluster${idx + 1}`;
-                    clusters[clusterId] = {
-                        employeeList: cl.pickup_sequence,
-                        routeName: cl.route_name,
-                        vehicleDetails: null
-                    };
-                    pickupTimesToFetch.add(pickupTime);
+                optimizedRoutes.forEach(route => {
+                    const pickupTime = route.pickup_time_group;
+                    const clusters = {};
+                    route.clusters.forEach((cl, idx) => {
+                        const clusterId = `cluster${idx + 1}`;
+                        clusters[clusterId] = {
+                            employeeList: cl.pickup_sequence,
+                            routeName: cl.route_name,
+                            vehicleDetails: null
+                        };
+                        pickupTimesToFetch.add(pickupTime);
+                    });
+                    initialClusters[pickupTime] = clusters;
                 });
-                initialClusters[pickupTime] = clusters;
-            });
 
-            setManualClusters(initialClusters);
-            setRoutingStatus({});
+                setManualClusters(initialClusters);
+                setRoutingStatus({});
 
-            // 🔁 Fetch routing status immediately for filtering
-            const pickupTimes = Array.from(pickupTimesToFetch);
-            if (pickupTimes.length > 0) {
-                fetchRoutingDetails(pickupTimes, formattedDate);
+                // 🔁 Fetch routing status immediately for filtering
+                const pickupTimes = Array.from(pickupTimesToFetch);
+                if (pickupTimes.length > 0) {
+                    fetchRoutingDetails(pickupTimes, formattedDate);
+                }
+
+                if (onComplete) onComplete(); // Trigger next step
             }
-
-            if (onComplete) onComplete(); // Trigger next step
-        }
-    });
-};
+        });
+    };
 
 
     // Fetch vehicle list
     const fetchVehicleList = () => {
-        if (vechilesList.length === 0) {
+        if (vehiclesList.length === 0) {
             setApiProps({
                 method: 'GET',
                 url: 'api/get/vechile/all',
                 render: (response) => {
                     if (response) {
-                        setVechileList(response.data);
+                        setVehicleList(response.data);
                     } else {
-                        console.error('No response received from API');
+                        error('No response received from API');  // ✅ Use toast
                     }
                 },
-                onError: (error) => {
-                    console.error('Error fetching vehicles:', error);
+                onError: (err) => {
+                    error(`Error fetching vehicles: ${err.message || err}`);  // ✅ Use toast
                 }
             });
         }
@@ -283,14 +283,14 @@ const PickupGroupingSchedules = () => {
         const cluster = manualClusters[pickupTime][clusterId];
 
         if (!cluster) {
-            console.error("Cluster not found.");
+            error("Cluster not found.");  // ✅ Use toast
             return;
         }
 
         const shiftDate = cluster.employeeList[0]?.shift_date;
         const employee = cluster.employeeList[empIndex];
         if (!employee) {
-            console.error('Employee not found at the given index');
+            error('Employee not found at the given index');  // ✅ Use toast
             return;
         }
 
@@ -371,8 +371,7 @@ const PickupGroupingSchedules = () => {
                 const result = response.data;
 
                 if (!result || !result.route || !Array.isArray(result.route)) {
-                    console.error("Invalid response format: 'route' array not found", result);
-                    error("Failed to update routing. Invalid response format.");
+                    error("Failed to update routing. Invalid response format.");  // ✅ Already using toast, removed console.error
                     return;
                 }
 
@@ -635,12 +634,12 @@ const PickupGroupingSchedules = () => {
                                                                     <Dropdown
                                                                         options={[
                                                                             "",
-                                                                            ...vechilesList.map(
+                                                                            ...vehiclesList.map(
                                                                                 (option) =>
                                                                                     `${option.vechile_number} - ${option.vechile_owner_name}`
                                                                             ),
                                                                         ]}
-                                                                        key={vechilesList
+                                                                        key={vehiclesList
                                                                             .map((option) => option.vechile_id)
                                                                             .join("-")}
                                                                         className="vechile-dropdown"
@@ -669,7 +668,7 @@ const PickupGroupingSchedules = () => {
                                                                                 return;
                                                                             }
 
-                                                                            const selectedVehicle = vechilesList.find(
+                                                                            const selectedVehicle = vehiclesList.find(
                                                                                 (v) =>
                                                                                     `${v.vechile_number} - ${v.vechile_owner_name}` ===
                                                                                     selectedValue
@@ -699,7 +698,7 @@ const PickupGroupingSchedules = () => {
                                                                                 }));
 
                                                                                 if (payload.length === 0) {
-                                                                                    console.error("No employees in the cluster.");
+                                                                                    error("No employees in the cluster.");  // ✅ Use toast
                                                                                     return;
                                                                                 }
 

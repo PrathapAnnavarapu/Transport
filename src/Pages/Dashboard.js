@@ -14,7 +14,7 @@ import Table from '../Components/Table';
 import { FaRupeeSign } from 'react-icons/fa';
 
 const Dashboard = () => {
-  const { error } = ToastComponent()
+  const { error: showError } = ToastComponent()  // ✅ Renamed to avoid shadowing
   const [todayBillingDetails, setTodayBillingDetails] = useState([])
   const [billingReports, setBillingReports] = useState([])
   const [apiProps, setApiProps] = useState(null);
@@ -54,11 +54,11 @@ const Dashboard = () => {
           if (response) {
             setTodayBillingDetails(response.data);
           } else {
-            error('No response received from API');
+            showError('No response received from API');
           }
         },
-        onError: (error) => {
-          error('Error fetching vehicles:', error);
+        onError: (err) => {  // ✅ Renamed to avoid shadowing
+          showError(`Error fetching today's billing: ${err.message || err}`);
         }
       });
     }
@@ -71,18 +71,18 @@ const Dashboard = () => {
           if (response) {
             setBillingReports(response.data);
           } else {
-            error('No response received from API');
+            showError('No response received from API');
           }
         },
-        onError: (error) => {
-          error('Error fetching vehicles:', error);
+        onError: (err) => {  // ✅ Renamed to avoid shadowing
+          showError(`Error fetching billing reports: ${err.message || err}`);
         }
       });
-    }    
-  }, [billingReports, todayBillingDetails])
+    }
+  }, [billingReports, todayBillingDetails, showError])  // ✅ Added showError dependency
 
 
-  
+
 
 
 
